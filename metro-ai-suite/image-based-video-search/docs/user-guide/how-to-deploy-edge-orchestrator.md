@@ -26,7 +26,7 @@ To deploy the **Image-Based Video Search** application with Edge Orchestrator, f
 1. Clone the **Image-Based Video Search** repository:
 
     ``` bash
-    git clone https://github.com/open-edge-platform/edge-ai-suites -b hotfix/release-1.0.0/emf-metro-apps
+    git clone https://github.com/open-edge-platform/edge-ai-suites -b <version>
     cd edge-ai-suites/metro-ai-suite/image-based-video-search
     ```
 
