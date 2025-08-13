@@ -103,20 +103,28 @@ services:
     environment:
       - MTX_PROTOCOLS=tcp
       - MTX_WEBRTCADDITIONALHOSTS=127.0.0.1
-      - HTTP_PROXY=
-      - HTTPS_PROXY=
-      - NO_PROXY=
-      - http_proxy=
-      - https_proxy=
-      - no_proxy=
+      - http_proxy=${https_proxy}
+      - https_proxy=${http_proxy}
+      - no_proxy=${no_proxy}
+      - MTX_WEBRTCICESERVERS2_0_URL=turn:${HOST_IP}:3478
+      - MTX_WEBRTCICESERVERS2_0_USERNAME=${MTX_WEBRTCICESERVERS2_0_USERNAME}
+      - MTX_WEBRTCICESERVERS2_0_PASSWORD=${MTX_WEBRTCICESERVERS2_0_PASSWORD}
     ports:
       - "8554:8554"
       - "1935:1935"
       - "8888:8888"
       - "8889:8889"
+      - "9997:9997"
       - "8890:8890/udp"
       - "8189:8189/udp"
     restart: on-failure:5
+  coturn:
+    image: coturn/coturn:latest
+    container_name: coturn
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+    command: ["-v"]  # Verbose mode for logging
   broker:
     image: docker.io/library/eclipse-mosquitto:2.0.20
     container_name: ibvs-broker
