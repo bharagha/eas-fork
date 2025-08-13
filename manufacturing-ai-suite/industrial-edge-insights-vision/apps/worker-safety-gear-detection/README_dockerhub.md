@@ -1,4 +1,4 @@
-# Worker Safety Gear Detection Reference Implementation
+# Worker Safety Gear Detection Sample Application
 
 This application enables real-time safety gear monitoring of workers by running inference workflows across multiple AI models. It connects multiple video streams from construction site cameras to AI-powered pipelines, all operating efficiently on a single industrial PC. This solution enhances logistics efficiency and inventory management by detecting defects before they impact operations.
 
