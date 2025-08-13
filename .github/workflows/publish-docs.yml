@@ -63,6 +63,7 @@ jobs:
       DOC_AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_AWS_SECRET_ACCESS_KEY }}
     with:
       docs_directory: manufacturing-ai-suite/industrial-edge-insights-vision/apps/pallet-defect-detection
+      branch_pattern: '(?!release-1\.0\.0)(^(main|release-.*)$)'  # Does not exist on release-1.0.0 branch - Exclude it
 
   build_pcb-anomaly-detection:
     permissions:
@@ -137,6 +138,7 @@ jobs:
       DOC_AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_AWS_SECRET_ACCESS_KEY }}
     with:
       docs_directory: manufacturing-ai-suite/industrial-edge-insights-vision/apps/weld-porosity
+      branch_pattern: '(?!release-1\.0\.0)(^(main|release-.*)$)'  # Does not exist on release-1.0.0 branch - Exclude it
 
   build_wind-turbine-anomaly-detection:
     permissions:
