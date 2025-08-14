@@ -64,6 +64,7 @@ spec:
             drop:
               - ALL
         {{- end }}
+        terminationMessagePath: /tmp/termination-log
         {{- if $.Values.gpu.enabled }}
         resources:
           limits:
