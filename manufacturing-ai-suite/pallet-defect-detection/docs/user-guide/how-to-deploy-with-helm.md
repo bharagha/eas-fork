@@ -40,7 +40,7 @@ Follow this procedure on the target system to install the package.
 1. Clone the **edge-ai-suites** repository and change into Pallet Defect Detection directory:
 
     ```bash
-    git clone https://github.com/open-edge-platform/edge-ai-suites -b hotfix/release-1.0.0/emf-doc-weld
+    git clone https://github.com/open-edge-platform/edge-ai-suites -b hotfix/release-1.0.0/emf-manufacturing-apps
     cd edge-ai-suites/manufacturing-ai-suite/pallet-defect-detection
     ```
 
