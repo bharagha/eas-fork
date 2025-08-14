@@ -103,7 +103,7 @@ helm upgrade --install smart-intersection ./smart-intersection/chart \
 
 ## Access Application Services using Node Port
 
-### Access the Application UI
+### Access the Application UI using Node Port
 
 - Get the Node Port Number using following command and use it to access the Application UI
 ```bash
@@ -114,7 +114,7 @@ kubectl get service smart-intersection-web -n smart-intersection -o jsonpath='{.
     - **Username**: `admin`
     - **Password**: Stored in `supass`. (Check `./smart-intersection/src/secrets/supass`)
 
-### Access the Grafana UI
+### Access the Grafana UI using Node Port
 
 - Get the Node Port Number using following command and use it to access the Grafana UI
 ```bash
@@ -128,7 +128,7 @@ kubectl get service smart-intersection-grafana -n smart-intersection -o jsonpath
 
 ## Access Application Services using Port Forwarding (Optional)
 
-### Access the Application UI
+### Access the Application UI using Port Forwarding (Optional)
 
 ```bash
 WEB_POD=$(kubectl get pods -n smart-intersection -l app=smart-intersection-web -o jsonpath="{.items[0].metadata.name}")
@@ -140,7 +140,7 @@ sudo -E kubectl -n smart-intersection port-forward $WEB_POD 443:443
     - **Password**: Stored in `supass`. (Check `./smart-intersection/src/secrets/supass`)
 
 
-### Access the Grafana UI
+### Access the Grafana UI using Port Forwarding (Optional)
 
 ```bash
 GRAFANA_POD=$(kubectl get pods -n smart-intersection -l app=smart-intersection-grafana -o jsonpath="{.items[0].metadata.name}")
