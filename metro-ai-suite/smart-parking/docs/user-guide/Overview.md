@@ -34,6 +34,9 @@ The DL Streamer Pipeline Server is a core component, designed to handle video an
 
 It integrates various components such as MQTT, Node-RED, and Grafana to provide a robust and flexible solution for real-time video inference pipelines. The tool is built to be user-friendly, allowing customization without the need for extensive coding knowledge. Validate your ideas by developing an end-to-end solution faster.
 
+[This sample application is ready for deployment with Edge Orchestrator. Download the deployment package and follow the instructions](../user-guide/how-to-deploy-with-edge-orchestrator.md)
+
+
 ## Learn More
 - [System Requirements](system-requirements.md)
 - [Get Started](get-started.md)
