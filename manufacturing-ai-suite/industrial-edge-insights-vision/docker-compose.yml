@@ -21,8 +21,8 @@ services:
       ENABLE_RTSP: false
       http_proxy: ${http_proxy}
       https_proxy: ${https_proxy}
-      no_proxy: ${no_proxy},${HOST_IP},${RTSP_CAMERA_IP},otel-collector,mediamtx-server,model_registry
-      NO_PROXY: ${no_proxy},${HOST_IP},${RTSP_CAMERA_IP},otel-collector,mediamtx-server,model_registry
+      no_proxy: ${no_proxy},${HOST_IP},${RTSP_CAMERA_IP},otel-collector,mediamtx-server,model_registry,mraas_minio
+      NO_PROXY: ${no_proxy},${HOST_IP},${RTSP_CAMERA_IP},otel-collector,mediamtx-server,model_registry,mraas_minio
       GST_DEBUG: "1"
       REST_SERVER_PORT: ${REST_SERVER_PORT}
       S3_STORAGE_HOST: mraas_minio
