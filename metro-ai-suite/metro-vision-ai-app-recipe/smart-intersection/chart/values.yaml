@@ -92,7 +92,7 @@ grafana:
 
 scene:
   repository: ghcr.io/open-edge-platform/edge-ai-libraries/intel/scenescape-controller
-  tag: v1.4.0-rc1
+  tag: v1.4.0-rc3
   pullPolicy: IfNotPresent
 
   service:
@@ -101,7 +101,7 @@ scene:
 
 pgserver:
   repository: ghcr.io/open-edge-platform/edge-ai-libraries/intel/scenescape-manager
-  tag: v1.4.0-rc1
+  tag: v1.4.0-rc3
   pullPolicy: IfNotPresent
 
   storageClassName: "hostpath"
@@ -114,7 +114,7 @@ web:
   replicas: 1
   image:
     repository: ghcr.io/open-edge-platform/edge-ai-libraries/intel/scenescape-manager
-    tag: v1.4.0-rc1
+    tag: v1.4.0-rc3
     pullPolicy: IfNotPresent
   dbhost: pgserver
   broker: broker.scenescape.intel.com
