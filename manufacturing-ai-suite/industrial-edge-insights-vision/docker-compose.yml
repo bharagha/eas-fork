@@ -25,7 +25,7 @@ services:
       NO_PROXY: ${no_proxy},${HOST_IP},${RTSP_CAMERA_IP},otel-collector,mediamtx-server,model_registry
       GST_DEBUG: "1"
       REST_SERVER_PORT: ${REST_SERVER_PORT}
-      S3_STORAGE_HOST: ${HOST_IP}
+      S3_STORAGE_HOST: mraas_minio
       S3_STORAGE_PORT: ${MR_MINIO_SERVER_PORT}
       S3_STORAGE_USER: ${MR_MINIO_ACCESS_KEY}
       S3_STORAGE_PASS: ${MR_MINIO_SECRET_KEY}

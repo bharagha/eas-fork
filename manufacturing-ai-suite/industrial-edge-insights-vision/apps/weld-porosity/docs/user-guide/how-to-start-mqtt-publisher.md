@@ -17,8 +17,10 @@ With the above configuration, the broker listens on port `1883`.
     ```yaml
     dlstreamer-pipeline-server:
       environment:
-        MQTT_HOST: <HOST_IP>
+        MQTT_HOST: mqtt_broker
         MQTT_PORT: 1883
+        no_proxy: <add mqtt_broker to the comma separated no_proxy list>
+        NO_PROXY: <add mqtt_broker to the comma separated NO_PROXY list>
     ```
     Once the changes are done, bring the services up. Restart them if already running.
 
