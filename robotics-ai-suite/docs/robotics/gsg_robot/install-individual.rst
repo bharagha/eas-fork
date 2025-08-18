@@ -67,7 +67,7 @@
       Follow-Me application with ADBSCAN using |realsense| camera.
 
    **ros-humble-followme-turtlebot3-gazebo**
-      An adaptation of |tb3| simulation by Intel to include a multi robot environment to demo the follow me algorithm.
+      An adaptation of |tb3| robot simulation by Intel to include a multi robot environment to demo the follow me algorithm.
 
    **ros-humble-its-planner**
       Intelligent Sampling and Two-Way Search.
@@ -79,7 +79,7 @@
       Meta Package for pick n place simulation deb files.
 
    **ros-humble-realsense2-tutorial-demo**
-      |realsense| tutorial with sample application.
+      |realsense| camera tutorial with sample application.
 
    **ros-humble-wandering**
       Wandering application.
