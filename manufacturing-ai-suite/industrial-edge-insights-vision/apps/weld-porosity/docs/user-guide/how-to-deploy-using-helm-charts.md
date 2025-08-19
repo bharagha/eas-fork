@@ -331,12 +331,6 @@ Applications can take advantage of S3 publish feature from DLStreamer Pipeline S
                         "peer-id": "weld"
                     }
                 },
-                "destination": {
-                "frame": {
-                    "type": "webrtc",
-                    "peer-id": "weld"
-                }
-                },
                 "parameters": {
                     "classification-properties": {
                         "model": "/home/pipeline-server/resources/models/weld-porosity/deployment/Classification/model/model.xml",

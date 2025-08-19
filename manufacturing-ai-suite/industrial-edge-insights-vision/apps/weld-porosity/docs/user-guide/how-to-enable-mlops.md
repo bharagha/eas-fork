@@ -49,12 +49,6 @@ With this feature, during runtime, you can download a new model from the registr
                         "peer-id": "weld"
                     }
                 },
-                "destination": {
-                "frame": {
-                    "type": "webrtc",
-                    "peer-id": "weld"
-                }
-                },
                 "parameters": {
                     "classification-properties": {
                         "model": "/home/pipeline-server/resources/models/weld-porosity/deployment/Classification/model/model.xml",
