@@ -13,7 +13,7 @@ The important components from Edge AI Libraries that help you develop such pipel
 - [Deep Learning Streamer Pipeline Server](https://github.com/open-edge-platform/edge-ai-libraries/tree/main/microservices/dlstreamer-pipeline-server): Built on top of GStreamer, a containerized microservice for development and deployment of video analytics pipeline.
 - [Model Registry](https://github.com/open-edge-platform/edge-ai-libraries/tree/main/microservices/model-registry): Providing capabilities to manage lifecycle of an AI model.
 - [Time Series Analytics Microservice](https://github.com/open-edge-platform/edge-ai-libraries/tree/main/microservices/time-series-analytics): Built on top of **Kapacitor**, a containerized microservice for development and deployment of time series analytics capabilities
-- [Intel&reg; Geti&trade; SDK](https://github.com/open-edge-platform/geti-sdk): A python package containing tools to interact with an Intel&reg; Geti&trade; server via the REST API, helping you build a full MLOps for vision based use cases.
+- [Geti&trade; SDK](https://github.com/open-edge-platform/geti-sdk): A Python package containing tools to interact with an Geti&trade; application's server via the REST API, helping you build a full MLOps for vision based use cases.
 - [Industrial Vision AI Application](https://github.com/open-edge-platform/edge-ai-suites/tree/main/manufacturing-ai-suite/industrial-edge-insights-vision/apps): Sample AI and vision applications for industrial use cases on the edge. 
 
 
