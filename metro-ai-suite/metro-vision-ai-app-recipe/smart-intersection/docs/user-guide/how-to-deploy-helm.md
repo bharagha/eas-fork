@@ -30,7 +30,7 @@ Before you can deploy with Helm, you need to clone the repository and run the in
 
 ```bash
 # Clone the repository
-git clone https://github.com/open-edge-platform/edge-ai-suites.git
+git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
 
 # Navigate to the Metro AI Suite directory
 cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/

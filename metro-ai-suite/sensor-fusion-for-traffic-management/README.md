@@ -102,7 +102,7 @@ bash install_project_related_libs.sh
 ## 3. Build Project
 - clone project
   ```bash
-  git clone https://github.com/open-edge-platform/edge-ai-suites.git
+  git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
   cd metro-ai-suite/sensor-fusion-for-traffic-management
   export PROJ_DIR=$PWD
   ```

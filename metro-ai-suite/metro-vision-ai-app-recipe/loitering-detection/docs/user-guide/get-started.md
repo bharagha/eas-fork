@@ -34,7 +34,7 @@ Enable running docker without "sudo": [Post Install](https://docs.docker.com/eng
 1. **Clone the Repository**:
    - Run:
      ```bash
-     git clone https://github.com/open-edge-platform/edge-ai-suites.git
+     git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
      cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/
      ```
 

@@ -26,7 +26,7 @@ By following this guide, you will learn how to:
 1. **Clone the Repository and Build Containers**:
     - Create and navigate to directory:
       ```bash
-        git clone https://github.com/open-edge-platform/edge-ai-suites.git
+        git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
         cd edge-ai-suites/metro-ai-suite/image-based-video-search
         docker compose build
       ```

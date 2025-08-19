@@ -44,7 +44,7 @@ To configure Docker:
 ## Clone source code
 
 ```bash
-git clone https://github.com/open-edge-platform/edge-ai-suites.git
+git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
 cd edge-ai-suites/manufacturing-ai-suite/wind-turbine-anomaly-detection
 ```
 ## Data flow explanation

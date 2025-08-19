@@ -16,7 +16,7 @@ ROS2: Tested on Humble (but Should work with Foxy too)
 **Clone picknplace and depending repos**
    
 ```
-git clone --recursive https://github.com/open-edge-platform/edge-ai-suites
+git clone --recursive https://github.com/open-edge-platform/edge-ai-suites -b release-1.2.0
 # If you have cloned the repo without the --recursive flag, run the following command to remedy:
 #git submodule update --init --recursive
 
