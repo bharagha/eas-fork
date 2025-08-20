@@ -33,8 +33,8 @@ Before you begin, ensure the following:
 1. **Clone the Repository**:
    - Run:
      ```bash
-     git clone https://github.com/open-edge-platform/edge-ai-suites.git
-     cd ./edge-ai-suites/metro-ai-suite/image-based-video-search
+     git clone https://github.com/open-edge-platform/edge-ai-suites -b hotfix/release-1.0.0/emf-metro-apps
+     cd edge-ai-suites/metro-ai-suite/image-based-video-search
      ```
 
 2. **Build Containers**:

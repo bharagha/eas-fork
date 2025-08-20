@@ -22,6 +22,7 @@ Before You Begin, ensure the following:
 ```bash
 helm upgrade \
     --install ibvs oci://registry-1.docker.io/intel/image-based-video-search \
+    --version 1.0.0 \
     --create-namespace \
     -n ibvs
 ```
@@ -34,6 +35,7 @@ If you are in a proxy environment, pass the proxy environment variables as follo
 # Replace the proxy values with the specific ones for your environment:
 helm upgrade \
     --install ibvs oci://registry-1.docker.io/intel/image-based-video-search \
+    --version 1.0.0 \
     --create-namespace \
     --set httpProxy="http://proxy.example.com:8080" \
     --set httpsProxy="http://proxy.example.com:8080" \

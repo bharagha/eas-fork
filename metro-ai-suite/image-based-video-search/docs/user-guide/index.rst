@@ -25,7 +25,7 @@ This guide is designed to help developers understand the architecture, setup, an
 .. toctree::
    :caption: Source Code
 
-   GitHub <https://github.com/open-edge-platform/edge-ai-suites/tree/main/metro-ai-suite/image-based-video-search>
+   GitHub <https://github.com/open-edge-platform/edge-ai-suites/tree/hotfix/release-1.0.0/emf-metro-apps/metro-ai-suite/image-based-video-search>
 
 .. toctree::
    :caption: Support and Community
