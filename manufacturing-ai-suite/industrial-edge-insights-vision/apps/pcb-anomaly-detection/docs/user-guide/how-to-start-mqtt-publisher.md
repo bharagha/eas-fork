@@ -17,7 +17,7 @@ With the above configuration, the broker listens on port 1883.
     ```yaml
     dlstreamer-pipeline-server:
       environment:
-        MQTT_HOST: <HOST_IP>    # or mqtt broker hostname e.g. mqtt-broker
+        MQTT_HOST: mqtt-broker    # broker hostname or HOST_IP
         MQTT_PORT: 1883
     ```
     Once the changes are done, bring the services up. Restart them if already running.
@@ -63,5 +63,5 @@ In the above curl command set `publish_frame` to false if you don't want frames 
 Output can be viewed on MQTT subscriber as shown below.
 
 ```sh
-docker run -it --entrypoint mosquitto_sub eclipse-mosquitto:latest --topic pcb_anomaly_detection -p 1883 -h <HOST_IP>
+docker run -it --entrypoint mosquitto_sub eclipse-mosquitto:latest --topic pcb_anomaly_detection -p 1883 -h mqtt-broker
 ```
