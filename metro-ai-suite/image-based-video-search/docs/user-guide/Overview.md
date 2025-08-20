@@ -33,16 +33,3 @@ The application includes a demonstration video for testing. The video loops cont
 - Matched search results, including metadata, timestamps, confidence scores, and frames
 
 ![Screenshot of the Image-Based Video Search sample application interface displaying search input and matched results](_images/imagesearch2.png)
-
-### Deployment with Edge Orchestrator
-
-- [This sample application is ready for deployment with Edge Orchestrator. Download the deployment package and follow the instructions](how-to-deploy-edge-orchestrator.md).
-
-### Learn More
-- [System Requirements](system-requirements.md)
-- [Get Started](get-started.md)
-- [Architecture Overview](overview-architecture.md)
-- [How to Build from Source](how-to-build-source.md)
-- [How to Deploy with Helm](how-to-deploy-helm.md)
-- [How to Deploy with the Edge Orchestrator](how-to-deploy-edge-orchestrator.md)
-- [Release Notes](release-notes.md)
