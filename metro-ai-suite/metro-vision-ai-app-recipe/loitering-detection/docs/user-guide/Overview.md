@@ -1,4 +1,8 @@
-# Overview
+# Loitering Detection Sample Application
+
+Effortlessly monitor and manage areas with AI-driven video analytics for real-time insights and enhanced security.
+
+## Overview
 
 Loitering Detection monitors and manages areas with AI-driven video analytics for real-time insights and enhanced security.
 
