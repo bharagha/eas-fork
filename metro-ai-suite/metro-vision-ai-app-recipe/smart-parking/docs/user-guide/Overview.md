@@ -1,4 +1,8 @@
-# Overview
+# Smart Parking Sample Application
+
+Effortlessly manage parking spaces with AI-driven video analytics for real-time insights and enhanced efficiency.
+
+## Overview
 
 The Smart Parking application effortlessly manages parking spaces with AI-driven video analytics for real-time insights and enhanced efficiency.
 
