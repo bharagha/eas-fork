@@ -23,18 +23,17 @@ Complete this section to confirm that your setup is working correctly and try ou
 
 Follow this procedure on the target system to download the package.
 
-**Note**: Skip this step if you have already followed the steps as part of the [Get Started guide](./get-started.md).
+1. Download helm chart with the following command
 
-Before you can deploy with Helm, you must clone the repository and download the helm chart:
+    `helm pull oci://registry-1.docker.io/intel/smart-parking --version 1.2.0`
 
-```bash
-# Clone the repository
-git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
+2. unzip the package using the following command
 
-# Navigate to the Metro AI Suite directory
-cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/
+    `tar xvf smart-parking-1.2.0.tgz`
+    
+- Get into the helm directory
 
-```
+    `cd smart-parking`
 
 
 ## Step 2: Configure and update the environment variables
