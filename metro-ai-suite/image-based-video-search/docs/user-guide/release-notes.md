@@ -32,7 +32,7 @@
 Details about the changes, improvements, and known issues in this release of the
 application.
 
-## Version 1.0.1
+## Version 1.0.1 
 
 **Release Date**: [2025-08-20]
 

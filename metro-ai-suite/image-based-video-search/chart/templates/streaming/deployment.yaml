@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -83,6 +82,7 @@ spec:
       {{- if ne .Values.streaming.serviceAccount "" }}
       serviceAccountName: {{ .Values.streaming.serviceAccount | quote }}
       {{- end }}
+
       volumes:
       - name: resources
         emptyDir: {}

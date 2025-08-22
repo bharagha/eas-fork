@@ -20,17 +20,17 @@ Before You Begin, ensure the following:
 
 ## Steps to Deploy
 
-To deploy the Smart Intersection Sample Application, copy and paste the entire block of following commands into your terminal and run them:
+To deploy the Smart Intersection Sample Application, copy and paste the entire block of commands below into your terminal and run them:
 
 ### Clone the Repository and Install Prerequisites
 
 **Note**: Skip this step if you have already followed the steps as part of the [Get Started guide](./get-started.md).
 
-Before you can deploy with Helm, you must clone the repository and run the installation script:
+Before you can deploy with Helm, you need to clone the repository and run the installation script:
 
 ```bash
 # Clone the repository
-git clone https://github.com/open-edge-platform/edge-ai-suites.git
+git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
 
 # Navigate to the Metro AI Suite directory
 cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/
@@ -171,7 +171,7 @@ kubectl -n smart-intersection port-forward $DLS_PS_POD 8080:8080
 kubectl -n smart-intersection port-forward $DLS_PS_POD 8555:8555
 ```
 
-## Uninstall the Application
+## How to Uninstall the Application
 
 To uninstall the application, run the following command:
 
@@ -179,7 +179,7 @@ To uninstall the application, run the following command:
 helm uninstall smart-intersection -n smart-intersection
 ```
 
-## Delete the Namespace
+## How to Delete the Namespace
 
 To delete the namespace and all resources within it, run the following command:
 

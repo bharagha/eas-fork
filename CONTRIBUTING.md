@@ -26,7 +26,7 @@ Read the [`Security Policy`](SECURITY.md).
 Clone the repository and follow the [`README`](README.md) to get started with the sample applications of interest.  
 
 ```
-    git clone https://github.com/open-edge-platform/edge-ai-suites.git
+    git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
     cd edge-ai-suites
 ```
 

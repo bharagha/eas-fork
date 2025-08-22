@@ -37,7 +37,7 @@ By following this guide, you will learn how to:
 1. **Clone the Repository**:
    - Run:
      ```bash
-     git clone https://github.com/open-edge-platform/edge-ai-suites.git
+     git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
      cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/
      ```
 
@@ -101,7 +101,7 @@ Open a browser and go to the following endpoints to access the application. Use 
     - **Password**: Stored in `supass`. (Check `./smart-intersection/src/secrets/supass`)
 
 > **Notes**:
-> - After starting the application, wait approximately 1 minute for the MQTT broker to initialize. You can confirm it is ready when green arrows appear for MQTT in the application interface. Since the application uses HTTPS, your browser may display a self-signed certificate warning. For the best experience, use **Google Chrome**.
+> - After starting the application, wait approximately 1 minute for the MQTT broker to initialize. You can confirm it is ready when green arrows appear for MQTT in the application interface. Since the application uses HTTPS, your browser may display a self-signed certificate warning. For the best experience, it is recommended to use **Google Chrome**.
 
 ### **Grafana UI** ###
 - **URL**: [http://localhost:3000](http://localhost:3000)

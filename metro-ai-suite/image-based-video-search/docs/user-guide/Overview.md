@@ -61,3 +61,4 @@ continuously and appears in the UI as soon as the application starts.
   frames
 
 ![Screenshot of the Image-Based Video Search sample application interface displaying search input and matched results](_images/imagesearch2.png)
+
