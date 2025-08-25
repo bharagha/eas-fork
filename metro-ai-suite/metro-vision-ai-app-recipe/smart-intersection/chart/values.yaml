@@ -91,7 +91,7 @@ grafana:
     size: 1Gi
 
 scene:
-  repository: docker.io/intel/scenescape-manager
+  repository: docker.io/intel/scenescape-controller
   tag: v1.4.0
   pullPolicy: IfNotPresent
 
