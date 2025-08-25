@@ -87,7 +87,6 @@ def stream_csv(mqttc, topic, subsample, sampling_rate, filename):
         start_time = time.time()
         row_served = 0
         tick = g_tick(float(subsample) / float(sampling_rate))
-
         for chunk in pd.read_csv(filename, chunksize=chunk_size):
             for _, row in chunk.iterrows():
 
