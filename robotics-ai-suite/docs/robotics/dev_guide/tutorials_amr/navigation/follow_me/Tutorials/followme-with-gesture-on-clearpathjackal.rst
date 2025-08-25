@@ -3,11 +3,11 @@
 Follow-me with ADBSCAN and Gesture-based Control on |clearpath_robotics| |jackal| Robot
 =========================================================================================
 
-This tutorial demonstrates the Follow-me algorithm along with a gesture recognition network, where the robot follows a target person in real time and responds to state commands through hand gestures. 
+This tutorial demonstrates the Follow-me algorithm along with a gesture recognition network, where the robot follows a target person in real time and responds to state commands through hand gestures.
 This tutorial uses |clearpath_robotics| |jackal| robot and one |realsense| camera D400 series.
 This camera provides the point cloud data as input for the |intel|-patented object detection algorithm Adaptive DBSCAN to detect the position of the target person. This camera also provides RGB images to the object detection network responsible for detecting hand gestures for controlling the robot's start and stop states.
-This RGB image is passed through a deep learning-based gesture recognition pipeline, called `Mediapipe Hands Framework <https://mediapipe.readthedocs.io/en/latest/solutions/hands.html>`__, to detect the gesture category. 
-The motion commands for the robot are published to ``twist`` topic based on these two outputs: person's position and gesture category. 
+This RGB image is passed through a deep learning-based gesture recognition pipeline, called `Mediapipe Hands Framework <https://mediapipe.readthedocs.io/en/latest/solutions/hands.html>`__, to detect the gesture category.
+The motion commands for the robot are published to ``twist`` topic based on these two outputs: person's position and gesture category.
 
 To start, the robot requires two conditions at the same time:
 
@@ -40,7 +40,7 @@ Install Python Modules
 
 This application uses `Mediapipe Hands Framework <https://mediapipe.readthedocs.io/en/latest/solutions/hands.html>`__
 for hand gesture recognition. Install the following modules as a prerequisite for the framework:
-   
+
 .. code-block:: bash
 
    pip3 install mediapipe
@@ -52,7 +52,7 @@ Identify serial number of Realsense Camera
 -------------------------------------------
 
 Install the |realsense| camera utilities package to easily read the correct serial number:
-    
+
 .. code-block:: bash
 
    sudo apt install librealsense2-utils
@@ -67,7 +67,7 @@ Check the Serial number:
 
 
 You will use this serial number (and not the ASIC Serial Number) when launching the demo below.
-         
+
 
 Run Demo with |realsense| Camera
 ---------------------------------
@@ -77,16 +77,16 @@ Execute the following script to launch Follow-Me with Gesture on the |clearpath_
 .. code-block:: bash
 
    source /opt/ros/humble/setup.bash
-   /opt/ros/humble/share/tutorial-follow-me-w-gesture/scripts/jackal-follow-me-w-gesture.sh <Camera Serial Number>
+   ros2 launch tutorial_follow_me_w_gesture jackal_gesture_launch.py <Camera Serial Number>
 
 
 <Camera Serial Number>: Use the serial number returned when using `rs-enumerate-devices`. Note that the output of other programs like `lsusb` might return an incorrect serial number.
- 
+
 After starting the script, the robot should begin searching for trackable objects in its initial detection radius (defaulting to around 0.5m), and then following acquired targets as soon as they provide a ``thumbs up`` to the |realsense| camera and move from the initial target location.
 
 .. note::
 
-   There are reconfigurable parameters in ``/opt/ros/humble/share/tutorial-follow-me-w-gesture/params`` directory for the |realsense| camera (`followme_adbscan_RS_params.yaml`). You can modify parameters depending on the respective robot, sensor configuration and environments (if required) before running the tutorial.
+   There are reconfigurable parameters in ``/opt/ros/humble/share/tutorial_follow_me_w_gesture/params`` directory for the |realsense| camera (`followme_adbscan_RS_params.yaml`). You can modify parameters depending on the respective robot, sensor configuration and environments (if required) before running the tutorial.
    Find a brief description of the parameters in the following table:
 
    .. list-table:: Configurable Parameters
@@ -145,4 +145,3 @@ Troubleshooting
 - If the motor controller board does not start, restart the robot.
 
 - For general robot issues, go to: :doc:`../../../../../dev_guide/tutorials_amr/robot-tutorials-troubleshooting`.
-
