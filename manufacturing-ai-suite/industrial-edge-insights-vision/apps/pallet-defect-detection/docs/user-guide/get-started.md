@@ -10,7 +10,7 @@
 ## Set up the application
 
 The following instructions assume Docker engine is correctly set up in the host system.
-If you don't have docker, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/) at docker.com.
+If not, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/) at docker.com.
 
 1. Clone the **edge-ai-suites** repository and change into industrial-edge-insights-vision directory. The directory contains the utility scripts required in the instructions that follows.
 
@@ -46,7 +46,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
 
 ## Deploy the Application
 
-5.  Bring up the application:
+5.  Start the Docker application:
 
    The Docker daemon service should start automatically at boot. If not, you can start it manually:
    ```bash
@@ -152,7 +152,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
     ]
     ```
 
-9.  Stop pipeline instance.
+9.  Stop pipeline instances.
 
     ```bash
     ./sample_stop.sh
@@ -182,10 +182,10 @@ If you don't have docker, follow the [installation guide for docker engine](http
     }
     ```
 
-    If you wish to stop a specific instance, make sure to identify it with the `--id` argument.
+    To stop a specific instance, identify it with the `--id` argument.
     For example, `./sample_stop.sh --id 4b36b3ce52ad11f0ad60863f511204e2`
 
-10. Bring down the application:
+10. Stop the Docker application.
 
     ```bash
     docker compose down -v
