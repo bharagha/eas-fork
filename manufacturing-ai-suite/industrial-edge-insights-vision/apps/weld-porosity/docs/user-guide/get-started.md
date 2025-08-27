@@ -10,7 +10,7 @@
 ## Set up the application
 
 The following instructions assume Docker engine is correctly set up in the host system.
-If you don't have docker, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/) at docker.com.
+If not, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/) at docker.com.
 
 1. Clone the **edge-ai-suites** repository and change into industrial-edge-insights-vision directory. The directory contains the utility scripts required in the instructions that follows.
 
@@ -47,7 +47,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
 
 ## Deploy the Application
 
-5.  Bring up the application:
+5.  Start the Docker application:
 
    The Docker daemon service should start automatically at boot. If not, you can start it manually:
    ```bash
@@ -104,7 +104,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
     ./sample_start.sh -p weld_porosity_classification
     ```
 
-    This command would look for the payload for the pipeline specified in `-p` argument above, inside the `payload.json` file and launch the a pipeline instance in DLStreamer Pipeline Server. Refer to the table, to learn about different options available.
+    This command will look for the payload for the pipeline specified in `-p` argument above, inside the `payload.json` file and launch the a pipeline instance in DLStreamer Pipeline Server. Refer to the table, to learn about different options available.
 
     Output:
 
@@ -126,7 +126,11 @@ If you don't have docker, follow the [installation guide for docker engine](http
 
     ```
 
-    > **NOTE:** This will start the pipeline. We can view the inference stream on WebRTC by opening a browser and navigating to http://<HOST_IP>:8889/weld/
+    > **NOTE:** This will start the pipeline. The inference stream can be viewed on WebRTC, in a browser, at the following url:
+    
+    ```bash
+    http://<HOST_IP>:8889/weld/
+    ```
 
 8.  Get status of pipeline instance(s) running.
 
@@ -154,7 +158,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
     ]
     ```
 
-9.  Stop pipeline instance.
+9.  Stop pipeline instances.
 
     ```bash
     ./sample_stop.sh
@@ -184,10 +188,10 @@ If you don't have docker, follow the [installation guide for docker engine](http
     }
     ```
 
-    If you wish to stop a specific instance, you can identify it with an `--id` argument to the command.
+    To stop a specific instance, identify it with the `--id` argument.
     For example, `./sample_stop.sh --id 0714ca6e5c7611f091f03266c7df2abf`
 
-10. Bring down the application
+10. Stop the Docker application.
 
     ```bash
     docker compose down -v
