@@ -12,16 +12,20 @@ import logging
 import pickle
 import time
 import math
-
+import warnings
 from collections import deque
 from kapacitor.udf.agent import Agent, Handler
 from kapacitor.udf import udf_pb2
-import modin.pandas as pd
 import numpy as np
 import requests
 from sklearnex import patch_sklearn, config_context
 patch_sklearn()
 from sklearn.linear_model import LinearRegression
+
+warnings.filterwarnings(
+    "ignore",
+    message=".*Threading.*parallel backend is not supported by Extension for Scikit-learn.*"
+)
 
 
 log_level = os.getenv('KAPACITOR_LOGGING_LEVEL', 'INFO').upper()
@@ -150,10 +154,6 @@ class AnomalyDetectorHandler(Handler):
             else:
                 continue
         # logger.info(f"Asset: {point.name}, x: {x}, y:{y}, cc:{self.enable_gcp_client}")
-
-        # check if there is an active alarm for timestamp of the current point
-        ns = point.time # in nanoseconds
-        ts = pd.Timestamp(ns)
 
         if x is not None and y is not None:
             # check if the current point is an anomalous point
