@@ -10,7 +10,7 @@
 ## Setup the application
 
 The following instructions assume Docker engine is correctly set up in the host system.
-If you don't have docker, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/).
+If not, follow the [installation guide for docker engine](https://docs.docker.com/engine/install/ubuntu/).
 
 1. Clone the **edge-ai-suites** repository and change into industrial-edge-insights-vision directory. The directory contains the utility scripts required in the instructions that follows.
 
@@ -43,11 +43,11 @@ If you don't have docker, follow the [installation guide for docker engine](http
     ./setup.sh
     ```
 
-    This script sets up application pre-requisites, download artifacts, sets executable permissions for scripts etc. Downloaded resource directories are made available to the application via volume mounting in docker compose file automatically.
+    This script sets up application pre-requisites, downloads artifacts, sets executable permissions for scripts etc. Downloaded resource directories are made available to the application via volume mounting in docker compose file automatically.
 
 ## Deploy the Application
 
-5.  Bring up the application:
+5.  Start the Docker application:
 
     ```bash
     docker compose up -d
@@ -119,9 +119,9 @@ If you don't have docker, follow the [installation guide for docker engine](http
     Payload for pipeline 'worker_safety_gear_detection' posted successfully. Response: "784b87b45d1511f08ab0da88aa49c01e"
     ```
 
-    NOTE: This would start the pipeline. We can view the inference stream on WebRTC by opening a browser and navigating to below url
+    NOTE: This will start the pipeline. The inference stream can be viewed on WebRTC, in a browser, at the following url:
 
-    ```
+    ```sh
     http://<HOST_IP>:8889/worker_safety/
     ```
 
@@ -151,7 +151,7 @@ If you don't have docker, follow the [installation guide for docker engine](http
     ]
     ```
 
-9.  Stop pipeline instance.
+9.  Stop pipeline instances.
 
     ```bash
     ./sample_stop.sh
@@ -181,10 +181,10 @@ If you don't have docker, follow the [installation guide for docker engine](http
     }
     ```
 
-    If you wish to stop a specific instance, make sure to identify it with the --id argument.
+    To stop a specific instance, identify it with the `--id` argument.
     For example, `./sample_stop.sh --id 784b87b45d1511f08ab0da88aa49c01e`
 
-10. Bring down the application
+10. Stop the Docker application.
 
     ```bash
     docker compose down -v
