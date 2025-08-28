@@ -11,6 +11,7 @@ from .conftest import (
   SCENESCAPE_REMOTE_URL,
   SCENESCAPE_USERNAME,
   SCENESCAPE_PASSWORD,
+  get_scenescape_kubernetes_url,
 )
 
 
@@ -110,12 +111,11 @@ def interact_with_help_section(waiter, tab_id, help_button_id, modal_id):
   )
   close_button.click()
 
-@pytest.mark.zephyr_id("NEX-T9391")
-def test_scene_help(waiter):
-  """Test that the scene help is available."""
+def scene_help_functionality_check(waiter, scenescape_url):
+  """Common function to test that the scene help is available."""
   # Perform login using Waiter class object
   waiter.perform_login(
-    SCENESCAPE_URL,
+    scenescape_url,
     By.ID, "username",
     By.ID, "password",
     By.ID, "login-submit",
@@ -136,15 +136,44 @@ def test_scene_help(waiter):
   interact_with_help_section(waiter, "tripwires-tab", "tripwire-help", "tripwireHelpModal")
   interact_with_help_section(waiter, "children-tab", "children-help", "childrenHelpModal")
 
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T10686")
+def test_scene_help_kubernetes(waiter):
+  """Test that the scene help is available."""
+  scene_help_functionality_check(waiter, get_scenescape_kubernetes_url())
 
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9391")
+def test_scene_help_docker(waiter):
+  """Test that the scene help is available."""
+  scene_help_functionality_check(waiter, SCENESCAPE_URL)
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T10679")
+def test_intersection_demo_availability_kubernetes(waiter):
+  """Test that Intersection-Demo is visible after login."""
+  # Perform login using Waiter class object
+  verify_intersection_demo_availability(waiter, get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9370")
-def test_intersection_demo_availability(waiter):
+def test_intersection_demo_availability_docker(waiter):
   """Test that Intersection-Demo is visible after login."""
   # Perform login using Waiter class object
   verify_intersection_demo_availability(waiter, SCENESCAPE_URL)
 
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T10681")
+def test_remote_intersection_demo_availability_kuberentes(waiter):
+  """Test that Intersection-Demo is visible after login via remote."""
+  if not SCENESCAPE_REMOTE_URL:
+    pytest.skip("SCENESCAPE_REMOTE_URL is not set")
+
+  verify_intersection_demo_availability(waiter, get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9372")
-def test_remote_intersection_demo_availability(waiter):
+def test_remote_intersection_demo_availability_docker(waiter):
   """Test that Intersection-Demo is visible after login via remote."""
   if not SCENESCAPE_REMOTE_URL:
     pytest.skip("SCENESCAPE_REMOTE_URL is not set")
