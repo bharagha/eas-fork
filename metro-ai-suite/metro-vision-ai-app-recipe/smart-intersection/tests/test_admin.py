@@ -57,7 +57,7 @@ def test_login_kubernetes(waiter):
   """Test login functionality for Kubernetes environment."""
   kubernetes_url = get_scenescape_kubernetes_url()
   logger.info(f"Using Kubernetes URL: {kubernetes_url}")
-  
+
   login_functionality(waiter, kubernetes_url)
   logger.info("Kubernetes login test completed")
 

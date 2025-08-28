@@ -26,7 +26,7 @@ from .conftest import (
 def components_access_functionality_check(scenescape_url):
   """
   Helper function to test that all application components are accessible.
-  
+
   Args:
     scenescape_url: The scenescape URL to test (either Kubernetes or Docker)
   """
@@ -44,7 +44,7 @@ def remote_components_access_functionality_check(scenescape_remote_url, grafana_
   """
   Helper function to test that all remote application components are accessible.
   Skips the test if any of the remote URL environment variables are not set.
-  
+
   Args:
     scenescape_remote_url: Remote Scenescape URL to test
     grafana_remote_url: Remote Grafana URL to test
