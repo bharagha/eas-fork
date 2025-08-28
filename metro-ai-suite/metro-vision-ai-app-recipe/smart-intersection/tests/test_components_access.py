@@ -20,13 +20,18 @@ from .conftest import (
   NODE_RED_REMOTE_URL,
   INFLUX_DB_ADMIN_USERNAME,
   INFLUX_DB_ADMIN_PASSWORD,
+  get_scenescape_kubernetes_url,
 )
 
-@pytest.mark.zephyr_id("NEX-T9368")
-def test_components_access():
-  """Test that all application components are accessible."""
+def components_access_functionality_check(scenescape_url):
+  """
+  Helper function to test that all application components are accessible.
+  
+  Args:
+    scenescape_url: The scenescape URL to test (either Kubernetes or Docker)
+  """
   urls_to_check = [
-    SCENESCAPE_URL,
+    scenescape_url,
     GRAFANA_URL,
     INFLUX_DB_URL,
     NODE_RED_URL,
@@ -35,15 +40,22 @@ def test_components_access():
   for url in urls_to_check:
     check_url_access(url)
 
-@pytest.mark.zephyr_id("NEX-T9369")
-def test_remote_components_access():
-  """Test that all remote application components are accessible."""
-
+def remote_components_access_functionality_check(scenescape_remote_url, grafana_remote_url, influx_remote_url, nodered_remote_url):
+  """
+  Helper function to test that all remote application components are accessible.
+  Skips the test if any of the remote URL environment variables are not set.
+  
+  Args:
+    scenescape_remote_url: Remote Scenescape URL to test
+    grafana_remote_url: Remote Grafana URL to test
+    influx_remote_url: Remote InfluxDB URL to test
+    nodered_remote_url: Remote Node-RED URL to test
+  """
   urls_to_check = [
-    SCENESCAPE_REMOTE_URL,
-    GRAFANA_REMOTE_URL,
-    INFLUX_REMOTE_DB_URL,
-    NODE_RED_REMOTE_URL
+    scenescape_remote_url,
+    grafana_remote_url,
+    influx_remote_url,
+    nodered_remote_url
   ]
 
   # Check if any URL is not set
@@ -52,6 +64,40 @@ def test_remote_components_access():
 
   for url in urls_to_check:
     check_url_access(url)
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T10677")
+def test_components_access_kubernetes():
+  """Test that all application components are accessible."""
+  components_access_functionality_check(get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9368")
+def test_components_access_docker():
+  """Test that all application components are accessible."""
+  components_access_functionality_check(SCENESCAPE_URL)
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T10678")
+def test_remote_components_access_kubernetes():
+  """Test that all remote application components are accessible."""
+  remote_components_access_functionality_check(
+    SCENESCAPE_REMOTE_URL,
+    GRAFANA_REMOTE_URL,
+    INFLUX_REMOTE_DB_URL,
+    NODE_RED_REMOTE_URL
+  )
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9369")
+def test_remote_components_access_docker():
+  """Test that all remote application components are accessible."""
+  remote_components_access_functionality_check(
+    SCENESCAPE_REMOTE_URL,
+    GRAFANA_REMOTE_URL,
+    INFLUX_REMOTE_DB_URL,
+    NODE_RED_REMOTE_URL
+  )
 
 @pytest.mark.zephyr_id("NEX-T9623")
 def test_grafana_failed_login(waiter):
