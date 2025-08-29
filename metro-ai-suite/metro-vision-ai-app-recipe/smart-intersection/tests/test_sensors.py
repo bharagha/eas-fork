@@ -66,17 +66,18 @@ def add_sensor(waiter, sensor_name, sensor_id):
   )
 
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9384")
-def test_add_sensor(waiter):
+def test_add_sensor_docker(waiter):
   """Test that the admin can add a new sensor."""
   name_of_new_sensor = "sensor_NEX-T9384"
   id_of_new_sensor = "sensor_id_NEX-T9384"  
 
   add_sensor(waiter, name_of_new_sensor, id_of_new_sensor)
 
-
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9385")
-def test_delete_sensor(waiter):
+def test_delete_sensor_docker(waiter):
   """Test that the admin can delete a new sensor."""
   name_of_new_sensor = "sensor_NEX-T9385"
   id_of_new_sensor = "sensor_id_NEX-T9385"

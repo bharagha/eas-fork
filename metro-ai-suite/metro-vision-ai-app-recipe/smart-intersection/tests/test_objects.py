@@ -51,16 +51,18 @@ def add_object(waiter, object_name):
     error_message=f"Table row with object name '{object_name}' is not present on the page"
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9386")
-def test_add_object(waiter):
+def test_add_object_docker(waiter):
   """Test that the admin can add a new object."""
   new_object_name = "object_NEX-T9386"
 
   add_object(waiter, new_object_name)
 
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9387")
-def test_delete_object(waiter):
+def test_delete_object_docker(waiter):
   """Test that the admin can delete an existing object."""
   new_object_name = "object_NEX-T9387"
 

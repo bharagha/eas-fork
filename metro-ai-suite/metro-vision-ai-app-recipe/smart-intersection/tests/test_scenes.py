@@ -181,15 +181,16 @@ def test_remote_intersection_demo_availability_docker(waiter):
   verify_intersection_demo_availability(waiter, SCENESCAPE_REMOTE_URL)
 
 
-
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9380")
-def test_add_scene(waiter):
+def test_add_scene_docker(waiter):
   """Test that the admin can add a new scene."""
   name_of_new_scene = "new_scene_NEX-T9380"
   create_and_verify_scene(waiter, name_of_new_scene)
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9381")
-def test_delete_scene(waiter):
+def test_delete_scene_docker(waiter):
   """Test that the admin can add and delete a new scene."""
   name_of_new_scene = "new_scene_NEX-T9381"
   create_and_verify_scene(waiter, name_of_new_scene)

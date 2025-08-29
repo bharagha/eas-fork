@@ -61,8 +61,9 @@ def add_camera(waiter, camera_name, camera_id):
   )
   return camera_card
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9632")
-def test_manage_cameras(waiter):
+def test_manage_cameras_docker(waiter):
   """Test that the admin can manage cameras."""
   camera_name = "south crosswalk view"
   modified_camera_name = "south crosswalk view modified"  
@@ -106,16 +107,18 @@ def test_manage_cameras(waiter):
     error_message="Modified camera name is not present in the header"
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9382")
-def test_add_camera(waiter):
+def test_add_camera_docker(waiter):
   """Test that the admin can add a new camera."""
   name_of_new_camera = "cam_NEX-T9382"
   id_of_new_camera = "cam_id_NEX-T9382"
 
   add_camera(waiter, name_of_new_camera, id_of_new_camera)
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9383")
-def test_delete_camera(waiter):
+def test_delete_camera_docker(waiter):
   """Test that the admin can delete a new camera."""
   name_of_new_camera = "cam_NEX-T9383"
   id_of_new_camera = "cam_id_NEX-T9383"

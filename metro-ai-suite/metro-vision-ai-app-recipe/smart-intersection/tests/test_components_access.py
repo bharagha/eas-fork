@@ -99,8 +99,9 @@ def test_remote_components_access_docker():
     NODE_RED_REMOTE_URL
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9623")
-def test_grafana_failed_login(waiter):
+def test_grafana_failed_login_docker(waiter):
   waiter.perform_login(
     GRAFANA_URL,
     By.CSS_SELECTOR, "[data-testid='data-testid Username input field']",
@@ -115,8 +116,9 @@ def test_grafana_failed_login(waiter):
     error_message="Login error message not found within 10 seconds"
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9617")
-def test_influx_db_login(waiter):
+def test_influx_db_login_docker(waiter):
   waiter.perform_login(
     INFLUX_DB_URL,
     By.CSS_SELECTOR, "[data-testid='username']",
@@ -131,8 +133,9 @@ def test_influx_db_login(waiter):
     error_message='Welcome message not visible within 10 seconds after login'
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9619")
-def test_remote_influx_db_login(waiter):
+def test_remote_influx_db_login_docker(waiter):
   if not INFLUX_REMOTE_DB_URL:
     pytest.skip("INFLUX_REMOTE_DB_URL is not set")
 
@@ -150,8 +153,9 @@ def test_remote_influx_db_login(waiter):
     error_message='Welcome message not visible within 10 seconds after login'
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9621")
-def test_influx_db_failed_login(waiter):
+def test_influx_db_failed_login_docker(waiter):
   waiter.perform_login(
     INFLUX_DB_URL,
     By.CSS_SELECTOR, "[data-testid='username']",

@@ -79,8 +79,9 @@ def login_functionality(waiter, url):
   )
   logger.info("Login verification completed")
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9390")
-def test_logout(waiter):
+def test_logout_docker(waiter):
   """Test that the admin logout functionality works correctly."""
   waiter.perform_login(
     SCENESCAPE_URL,
@@ -103,8 +104,9 @@ def test_logout(waiter):
     error_message='"username" input field not found within 10 seconds'
   )
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9388")
-def test_change_password(waiter):
+def test_change_password_docker(waiter):
   """Test that the admin can change the password successfully."""
   waiter.perform_login(
     SCENESCAPE_URL,

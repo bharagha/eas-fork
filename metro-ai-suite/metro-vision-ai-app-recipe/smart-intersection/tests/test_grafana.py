@@ -54,7 +54,7 @@ def navigate_to_dashboard(waiter, url):
   )
   anthem_dashboard_link.click()
 
-def test_grafana_anthem_dashboard_availability_functionality(waiter, grafana_url):
+def grafana_anthem_dashboard_availability_check(waiter, grafana_url):
   """Test the availability of the Anthem dashboard in Grafana."""
   navigate_to_dashboard(waiter, grafana_url,GRAFANA_URL)
   check_grafana_panel_value(waiter)
@@ -63,13 +63,13 @@ def test_grafana_anthem_dashboard_availability_functionality(waiter, grafana_url
 @pytest.mark.zephyr_id("NEX-T10680")
 def test_grafana_anthem_dashboard_availability_kubernetes(waiter):
   """Test the availability of the Anthem dashboard in Grafana for Kubernetes deployment."""
-  test_grafana_anthem_dashboard_availability_functionality(waiter, GRAFANA_URL)
+  grafana_anthem_dashboard_availability_check(waiter, GRAFANA_URL)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9371")
 def test_grafana_anthem_dashboard_availability_docker(waiter):
   """Test the availability of the Anthem dashboard in Grafana for Docker deployment."""
-  test_grafana_anthem_dashboard_availability_functionality(waiter, GRAFANA_URL)
+  grafana_anthem_dashboard_availability_check(waiter, GRAFANA_URL)
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T10682")
@@ -78,7 +78,7 @@ def test_remote_grafana_anthem_dashboard_availability_kubernetes(waiter):
   if not GRAFANA_REMOTE_URL:
     pytest.skip("GRAFANA_REMOTE_URL is not set")
 
-  test_grafana_anthem_dashboard_availability_functionality(waiter, GRAFANA_REMOTE_URL)
+  grafana_anthem_dashboard_availability_check(waiter, GRAFANA_REMOTE_URL)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9373")
@@ -87,4 +87,4 @@ def test_remote_grafana_anthem_dashboard_availability_docker(waiter):
   if not GRAFANA_REMOTE_URL:
     pytest.skip("GRAFANA_REMOTE_URL is not set")
 
-  test_grafana_anthem_dashboard_availability_functionality(waiter, GRAFANA_REMOTE_URL)
+  grafana_anthem_dashboard_availability_check(waiter, GRAFANA_REMOTE_URL)

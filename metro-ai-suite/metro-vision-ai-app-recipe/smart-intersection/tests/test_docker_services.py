@@ -54,8 +54,9 @@ def check_all_urls():
     check_url_access(url)
 
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9625")
-def test_components_access_with_no_dlstreamer():
+def test_components_access_with_no_dlstreamer_docker():
   """Test that all application components are accessible without DLStreamer."""
   container = get_running_dlstreamer_container()
 
@@ -82,9 +83,9 @@ def test_components_access_with_no_dlstreamer():
   # Wait for the container to start
   assert wait_for_container_to_start(container, timeout=30), "Container did not start - next tests may fail"
 
-
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9626")
-def test_components_access_after_dlstreamer_restart():
+def test_components_access_after_dlstreamer_restart_docker():
   """Test that all application components are accessible after DLStreamer container restart."""
   container = get_running_dlstreamer_container()
 
@@ -101,15 +102,17 @@ def test_components_access_after_dlstreamer_restart():
   check_all_urls()
 
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9366")
-def test_docker_build_and_deployment():
+def test_docker_build_and_deployment_docker():
   """Test that all docker-compose services are running after build and deploy."""
   running = get_running_services()
   expected = get_all_services()
   assert expected == running, f"Not all services are running. Expected: {expected}, Running: {running}"
 
+@pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9376")
-def test_docker_application_restart():
+def test_docker_application_restart_docker():
   """Test that all application components are accessible after Docker restart."""
   # Teardown: stop and remove containers
   logger.info("Tearing down Docker containers...")
