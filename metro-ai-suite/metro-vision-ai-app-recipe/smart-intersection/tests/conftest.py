@@ -266,36 +266,9 @@ def setup_environment(request):
       assert code == 0, f"Build and Deploy failed: {err}"
       logger.info("Docker containers deployed.")
 
-      # Check localhost service readiness for Docker
-      localhost_services_urls = [SCENESCAPE_URL, GRAFANA_URL, INFLUX_DB_URL, NODE_RED_URL]
-      logger.info(f"Checking {len(localhost_services_urls)} localhost services: {localhost_services_urls}")
-      wait_for_services_readiness(localhost_services_urls)
-      
-      # Check remote service readiness only if remote URLs are configured
-      if are_remote_urls_configured():
-        logger.info("Remote URLs are configured, checking remote services readiness...")
-        remote_services_urls = []
-        if SCENESCAPE_REMOTE_URL:
-          logger.info(f"Adding SCENESCAPE_REMOTE_URL: {SCENESCAPE_REMOTE_URL}")
-          remote_services_urls.append(SCENESCAPE_REMOTE_URL)
-        if GRAFANA_REMOTE_URL:
-          logger.info(f"Adding GRAFANA_REMOTE_URL: {GRAFANA_REMOTE_URL}")
-          remote_services_urls.append(GRAFANA_REMOTE_URL)
-        if INFLUX_REMOTE_DB_URL:
-          logger.info(f"Adding INFLUX_REMOTE_DB_URL: {INFLUX_REMOTE_DB_URL}")
-          remote_services_urls.append(INFLUX_REMOTE_DB_URL)
-        if NODE_RED_REMOTE_URL:
-          logger.info(f"Adding NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
-          remote_services_urls.append(NODE_RED_REMOTE_URL)
-        
-        if remote_services_urls:
-          logger.info(f"Checking {len(remote_services_urls)} remote services: {remote_services_urls}")
-          wait_for_services_readiness(remote_services_urls)
-          logger.info("All remote services are ready.")
-        else:
-          logger.info("No valid remote URLs found.")
-      else:
-        logger.info("No remote URLs configured, skipping remote services check.")
+      # Wait for services to be ready
+      services_urls = [SCENESCAPE_URL, GRAFANA_URL, INFLUX_DB_URL, NODE_RED_URL]
+      wait_for_services_readiness(services_urls)
 
     yield
     
