@@ -69,8 +69,15 @@ def start_remote_port_forwarding(service_name, remote_host, local_port, remote_p
   """Start remote port forwarding for a service and return the process."""
   pod_name = get_pod_name(service_name, namespace)
   
+  # Use sudo with password for privileged ports (<1024)
   if local_port < 1024:
-    cmd = f'sudo -S -E kubectl -n {namespace} port-forward {pod_name} {local_port}:{remote_port} --address {remote_host}'
+    sudo_password = os.environ.get('SUDO_PASSWORD')
+    if not sudo_password:
+      logger.error("SUDO_PASSWORD not set in environment variables, but required for privileged port")
+      raise ValueError("SUDO_PASSWORD environment variable is required for ports < 1024. Set it with: export SUDO_PASSWORD=\"your_password\"")
+
+    # Use echo to pipe password to sudo -S (stdin) and preserve environment with -E
+    cmd = f'echo "{sudo_password}" | sudo -S -E kubectl -n {namespace} port-forward {pod_name} {local_port}:{remote_port} --address {remote_host}'
   else:
     cmd = f"kubectl -n {namespace} port-forward {pod_name} {local_port}:{remote_port} --address {remote_host}"
     
