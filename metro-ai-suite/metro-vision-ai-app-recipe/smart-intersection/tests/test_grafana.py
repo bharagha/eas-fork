@@ -56,7 +56,7 @@ def navigate_to_dashboard(waiter, url):
 
 def grafana_anthem_dashboard_availability_check(waiter, grafana_url):
   """Test the availability of the Anthem dashboard in Grafana."""
-  navigate_to_dashboard(waiter, grafana_url,GRAFANA_URL)
+  navigate_to_dashboard(waiter, grafana_url)
   check_grafana_panel_value(waiter)
 
 @pytest.mark.kubernetes
