@@ -171,8 +171,7 @@ def setup_environment(request):
   remote_influxdb_port_forward_process = None
   remote_nodered_port_forward_process = None
   
-  try:
-    if "kubernetes" in request.config.getoption("markexpr"):
+  if "kubernetes" in request.config.getoption("markexpr"):
       logger.info("Deploying Kubernetes environment...")
       out, err, code = run_command(
         "helm upgrade --install smart-intersection ./chart "
@@ -200,7 +199,7 @@ def setup_environment(request):
       influxdb_port_forward_process = start_port_forwarding("smart-intersection-influxdb", 8086, 8086)
       nodered_port_forward_process = start_port_forwarding("smart-intersection-nodered", 1880, 1880)
 
-      # Check localhost service readiness
+      # Check service readiness
       localhost_services_urls = [
         SCENESCAPE_KUBERNETES_URL,
         GRAFANA_URL,
@@ -209,7 +208,6 @@ def setup_environment(request):
       ]
       wait_for_services_readiness(localhost_services_urls)
       
-      # Check remote service readiness only if remote URLs are configured
       if are_remote_urls_configured():        
         # Start remote port forwarding for each configured service
         if SCENESCAPE_REMOTE_URL:
@@ -235,72 +233,49 @@ def setup_environment(request):
           logger.info(f"NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
           logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
           remote_nodered_port_forward_process = start_remote_port_forwarding("smart-intersection-nodered", parsed.hostname, parsed.port, 1880)
-        
-        # Build list of remote URLs to check
-        remote_services_urls = []
-        if SCENESCAPE_REMOTE_URL:
-          logger.info(f"Adding SCENESCAPE_REMOTE_URL: {SCENESCAPE_REMOTE_URL}")
-          remote_services_urls.append(SCENESCAPE_REMOTE_URL)
-        if GRAFANA_REMOTE_URL:
-          logger.info(f"Adding GRAFANA_REMOTE_URL: {GRAFANA_REMOTE_URL}")
-          remote_services_urls.append(GRAFANA_REMOTE_URL)
-        if INFLUX_REMOTE_DB_URL:
-          logger.info(f"Adding INFLUX_REMOTE_DB_URL: {INFLUX_REMOTE_DB_URL}")
-          remote_services_urls.append(INFLUX_REMOTE_DB_URL)
-        if NODE_RED_REMOTE_URL:
-          logger.info(f"Adding NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
-          remote_services_urls.append(NODE_RED_REMOTE_URL)
-        
-        if remote_services_urls:
-          logger.info(f"Checking {len(remote_services_urls)} remote services: {remote_services_urls}")
-          wait_for_services_readiness(remote_services_urls)
-          logger.info("All remote services are ready.")
-        else:
-          logger.info("No valid remote URLs found.")
       else:
-        logger.info("No remote URLs configured, skipping remote services check.")
+        logger.info("No remote URLs configured, skipping remote port forwarding.")
 
-    else:
-      logger.info("Building and deploying Docker containers...")
-      out, err, code = run_command("docker compose up -d")
-      assert code == 0, f"Build and Deploy failed: {err}"
-      logger.info("Docker containers deployed.")
+  else:
+    logger.info("Building and deploying Docker containers...")
+    out, err, code = run_command("docker compose up -d")
+    assert code == 0, f"Build and Deploy failed: {err}"
+    logger.info("Docker containers deployed.")
 
-      # Wait for services to be ready
-      services_urls = [SCENESCAPE_URL, GRAFANA_URL, INFLUX_DB_URL, NODE_RED_URL]
-      wait_for_services_readiness(services_urls)
+    # Wait for services to be ready
+    services_urls = [SCENESCAPE_URL, GRAFANA_URL, INFLUX_DB_URL, NODE_RED_URL]
+    wait_for_services_readiness(services_urls)
 
-    yield
+  yield
+  
+  # Cleanup - this ALWAYS runs regardless of success/failure
+  if "kubernetes" in request.config.getoption("markexpr"):
+    logger.info("Tearing down Kubernetes environment...")
     
-  finally:
-    # Cleanup - this ALWAYS runs regardless of success/failure
-    if "kubernetes" in request.config.getoption("markexpr"):
-      logger.info("Tearing down Kubernetes environment...")
-      
-      # Stop port forwarding processes first
-      for process_name, process in [
-        ("web", web_port_forward_process),
-        ("grafana", grafana_port_forward_process), 
-        ("influxdb", influxdb_port_forward_process),
-        ("nodered", nodered_port_forward_process),
-        ("remote-web", remote_web_port_forward_process),
-        ("remote-grafana", remote_grafana_port_forward_process),
-        ("remote-influxdb", remote_influxdb_port_forward_process),
-        ("remote-nodered", remote_nodered_port_forward_process)
-      ]:
-        stop_port_forwarding_process(process_name, process)
-      
-      logger.info("Port forwarding stopped.")
-      
-      # Clean up Kubernetes resources  
-      run_command("helm uninstall smart-intersection -n smart-intersection")
-      run_command("kubectl delete namespace smart-intersection")
-      logger.info("Kubernetes environment removed.")
-    else:
-      logger.info("Tearing down Docker containers...")
-      run_command("docker compose down")
-      logger.info("Docker containers stopped and removed.")
+    # Stop port forwarding processes first
+    for process_name, process in [
+      ("web", web_port_forward_process),
+      ("grafana", grafana_port_forward_process), 
+      ("influxdb", influxdb_port_forward_process),
+      ("nodered", nodered_port_forward_process),
+      ("remote-web", remote_web_port_forward_process),
+      ("remote-grafana", remote_grafana_port_forward_process),
+      ("remote-influxdb", remote_influxdb_port_forward_process),
+      ("remote-nodered", remote_nodered_port_forward_process)
+    ]:
+      stop_port_forwarding_process(process_name, process)
+    
+    logger.info("Port forwarding stopped.")
+    
+    # Clean up Kubernetes resources  
+    run_command("helm uninstall smart-intersection -n smart-intersection")
+    run_command("kubectl delete namespace smart-intersection")
+    logger.info("Kubernetes environment removed.")
+  else:
+    logger.info("Tearing down Docker containers...")
+    run_command("docker compose down")
+    logger.info("Docker containers stopped and removed.")
 
-      logger.info("Removing Docker volumes...")
-      run_command("docker volume ls | grep metro-vision-ai-app-recipe | awk '{ print $2 }' | xargs docker volume rm")
-      logger.info("Docker volumes removed.")
+    logger.info("Removing Docker volumes...")
+    run_command("docker volume ls | grep metro-vision-ai-app-recipe | awk '{ print $2 }' | xargs docker volume rm")
+    logger.info("Docker volumes removed.")
