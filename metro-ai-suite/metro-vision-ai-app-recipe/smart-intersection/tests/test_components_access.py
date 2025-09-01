@@ -8,7 +8,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
-from tests.utils.utils import check_url_access
+from tests.utils.utils import check_urls_access
 from .conftest import (
   SCENESCAPE_URL,  
   SCENESCAPE_REMOTE_URL,
@@ -37,8 +37,7 @@ def components_access_functionality_check(scenescape_url):
     NODE_RED_URL,
   ]
 
-  for url in urls_to_check:
-    check_url_access(url)
+  check_urls_access(urls_to_check)
 
 def remote_components_access_functionality_check(scenescape_remote_url, grafana_remote_url, influx_remote_url, nodered_remote_url):
   """
@@ -62,8 +61,7 @@ def remote_components_access_functionality_check(scenescape_remote_url, grafana_
   if any(url is None or url == "" for url in urls_to_check):
     pytest.skip("One or more remote URL environment variables are not set")
 
-  for url in urls_to_check:
-    check_url_access(url)
+  check_urls_access(urls_to_check)
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T10677")

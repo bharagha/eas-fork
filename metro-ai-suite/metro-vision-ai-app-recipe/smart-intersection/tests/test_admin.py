@@ -9,7 +9,7 @@ import subprocess
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
-from tests.utils.utils import check_url_access, get_node_port
+from tests.utils.utils import get_node_port, check_urls_access
 from .conftest import (
   SCENESCAPE_URL,
   get_scenescape_kubernetes_url,
@@ -39,10 +39,8 @@ def web_options_availability_check(waiter, scenescape_url):
     scenescape_url + "/admin"  # Admin
   ]
 
-  # Check each link for a 200 status code
-  for url in navbar_links:
-    logger.info("Checking URL: %s", url)
-    check_url_access(url)
+  # Check all URLs using the common function
+  check_urls_access(navbar_links)
 
 
 @pytest.mark.docker

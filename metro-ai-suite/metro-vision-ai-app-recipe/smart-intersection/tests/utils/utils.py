@@ -107,3 +107,22 @@ def check_url_access(url, timeout=10):
   except requests.exceptions.RequestException as e:
     logger.error(f"Service access failed: {url} (error: {e})")
     return False
+
+def check_urls_access(urls_to_check):
+  """
+  Common function to check access to multiple URLs and collect failures.
+
+  Args:
+    urls_to_check: List of URLs to check
+
+  Raises:
+    AssertionError: If any URLs fail with list of failed URLs
+  """
+  failed_urls = []
+  for url in urls_to_check:
+    if not check_url_access(url):
+      failed_urls.append(url)
+      logger.error(f"Failed to access URL: {url}")
+
+  if failed_urls:
+    assert False, f"Failed to access the following URLs: {failed_urls}"
