@@ -40,6 +40,20 @@ By following this guide, you will learn how to:
      ./install.sh smart-parking
      ```
 
+    <details>
+    <summary>
+    Specify Custom Host IP Address (Advanced Configuration)
+    </summary>
+
+    For environments requiring a specific host IP address (such as when using Edge Manageability Toolkit or deploying across different network interfaces), you can explicitly specify the IP address:
+
+    ```bash
+    ./install.sh smart-parking <HOST_IP>
+    ```
+    Replace `<HOST_IP>` with your target IP address.
+
+    </details>
+
 ## Run the Application
 
 1. **Start the Application**:
@@ -120,7 +134,8 @@ By following this guide, you will learn how to:
     ```bash
     curl http://localhost:8080/pipelines
     ```
-- **WebRTC**: [http://localhost:8889](http://localhost:8889)
+- **WebRTC**: [http://localhost:8889/object_detection_1](http://localhost:8889/object_detection_1)
+
 
 ## **Stop the Application**:
 

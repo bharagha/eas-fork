@@ -20,13 +20,13 @@ Before You Begin, ensure the following:
 
 ## Steps to Deploy
 
-To deploy the Smart Intersection Sample Application, copy and paste the entire block of commands below into your terminal and run them:
+To deploy the Smart Intersection Sample Application, copy and paste the entire block of following commands into your terminal and run them:
 
 ### Clone the Repository and Install Prerequisites
 
 **Note**: Skip this step if you have already followed the steps as part of the [Get Started guide](./get-started.md).
 
-Before you can deploy with Helm, you need to clone the repository and run the installation script:
+Before you can deploy with Helm, you must clone the repository and run the installation script:
 
 ```bash
 # Clone the repository
@@ -59,13 +59,39 @@ no_proxy: "localhost,127.0.0.1,.local,.cluster.local"
 
 Replace `your-proxy-server:port` with your actual proxy server details.
 
+<details>
+<summary>
+Switch to Stable Build (Optional)
+</summary>
+
+To use stable releases from Docker Hub instead of weekly builds, update the values.yaml file with following information,
+
+```yaml
+scene:
+  repository: intel/scenescape-controller
+  tag: v1.3.0
+pgserver:
+  repository: intel/scenescape-manager
+  tag: v1.3.0
+web:
+  image:
+    repository: intel/scenescape-manager
+    tag: v1.3.0
+dlstreamerPipelineServer:
+  repository: intel/dlstreamer-pipeline-server
+  tag: 3.1.0-ubuntu24
+```
+This updates the application to use stable images from [Docker Hub](https://hub.docker.com/u/intel/).
+
+</details>
+
 ### Deploy the application
 
 Now you're ready to deploy the Smart Intersection application:
 
 ```bash
 
-# Install the chart 
+# Install the chart
 helm upgrade --install smart-intersection ./smart-intersection/chart \
   --create-namespace \
   --set grafana.service.type=NodePort \
@@ -75,7 +101,7 @@ helm upgrade --install smart-intersection ./smart-intersection/chart \
 
 ## Access Application Services using Node Port
 
-### Access the Application UI
+### Access the Application UI using Node Port
 
 - Get the Node Port Number using following command and use it to access the Application UI
 ```bash
@@ -86,7 +112,7 @@ kubectl get service smart-intersection-web -n smart-intersection -o jsonpath='{.
     - **Username**: `admin`
     - **Password**: Stored in `supass`. (Check `./smart-intersection/src/secrets/supass`)
 
-### Access the Grafana UI
+### Access the Grafana UI using Node Port
 
 - Get the Node Port Number using following command and use it to access the Grafana UI
 ```bash
@@ -145,7 +171,7 @@ kubectl -n smart-intersection port-forward $DLS_PS_POD 8080:8080
 kubectl -n smart-intersection port-forward $DLS_PS_POD 8555:8555
 ```
 
-## How to Uninstall the Application
+## Uninstall the Application
 
 To uninstall the application, run the following command:
 
@@ -153,7 +179,7 @@ To uninstall the application, run the following command:
 helm uninstall smart-intersection -n smart-intersection
 ```
 
-## How to Delete the Namespace
+## Delete the Namespace
 
 To delete the namespace and all resources within it, run the following command:
 
