@@ -11,7 +11,7 @@ These tutorials demonstrate how to use the Visual Search and QA reference implem
 
 In this tutorial, you will learn how to use your own dataset for searching.
 
-### Learning Objectives
+**Learning objectives**
 
 -   By the end of this tutorial, you will be able to ingest your own dataset to vector DB and conduct search and QA based on them.
 
@@ -40,7 +40,7 @@ In this tutorial, you learned how to use your own dataset for searching.
 
 In this tutorial, you will learn how to ingest data along with metadata to support filtered search
 
-### Learning Objectives
+**Learning objectives**
 
 -   By the end of this tutorial, you will be able to ingest data with metadata by providing matched metadata json file for each media data file in the `file directory on host` used for updating DB
 -   By the end of this tutorial, you will be able to manually ingest single data file with specified metadata using dataprep microservice API
@@ -141,7 +141,7 @@ In this tutorial, you learned how to: ingest data with metadata (both via provid
 
 In this tutorial, you will learn how to adjust the configuarable parameters for the application
 
-### Learning Objectives
+**Learning objectives**
 
 -   By the end of this tutorial, you will be able to know which parameters to modify when needed
 
