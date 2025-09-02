@@ -22,7 +22,7 @@ funasr-onnx==0.4.1
 onnxruntime==1.20.0
 
 # museTalk
-transformers==4.50.0
+transformers==4.53.0
 soundfile==0.12.1
 diffusers==0.27.2
 accelerate==0.28.0
