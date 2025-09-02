@@ -42,45 +42,45 @@ def verify_intersection_demo_availability(waiter, url):
     "Scene name text does not match 'Intersection-Demo'"
   )
 
-def create_and_verify_scene(waiter, name_of_new_scene):
-  """Helper function to create and verify a new scene."""
-  # Perform login using Waiter class object
-  waiter.perform_login(
-    SCENESCAPE_URL,
-    By.ID, "username",
-    By.ID, "password",
-    By.ID, "login-submit",
-    SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD
-  )
+def create_and_verify_scene(waiter, name_of_new_scene, url=SCENESCAPE_URL):
+    """Helper function to create and verify a new scene."""
+    # Perform login using Waiter class object
+    waiter.perform_login(
+        url,
+        By.ID, "username",
+        By.ID, "password",
+        By.ID, "login-submit",
+        SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD
+    )
 
-  # Find the link element with id 'new_scene' and click it
-  new_scene_link = waiter.wait_and_assert(
-    EC.presence_of_element_located((By.ID, "new_scene")),
-    error_message="Link with id 'new_scene' is not present on the page"
-  )
-  new_scene_link.click()
+    # Find the link element with id 'new_scene' and click it
+    new_scene_link = waiter.wait_and_assert(
+        EC.presence_of_element_located((By.ID, "new_scene")),
+        error_message="Link with id 'new_scene' is not present on the page"
+    )
+    new_scene_link.click()
 
-  # Verify that the 'Save New Scene' button is present
-  save_button = waiter.wait_and_assert(
-    EC.presence_of_element_located((By.ID, "save")),
-    error_message="Save New Scene button is not present on the page"
-  )
+    # Verify that the 'Save New Scene' button is present
+    save_button = waiter.wait_and_assert(
+        EC.presence_of_element_located((By.ID, "save")),
+        error_message="Save New Scene button is not present on the page"
+    )
 
-  # Fill in the scene name and pixel per meter inputs
-  scene_name_input = waiter.driver.find_element(By.ID, "id_name")
-  pixel_per_meter_input = waiter.driver.find_element(By.ID, "id_scale")
+    # Fill in the scene name and pixel per meter inputs
+    scene_name_input = waiter.driver.find_element(By.ID, "id_name")
+    pixel_per_meter_input = waiter.driver.find_element(By.ID, "id_scale")
 
-  scene_name_input.send_keys(name_of_new_scene)
-  pixel_per_meter_input.send_keys("100")
+    scene_name_input.send_keys(name_of_new_scene)
+    pixel_per_meter_input.send_keys("100")
 
-  # Click the save button
-  save_button.click()
+    # Click the save button
+    save_button.click()
 
-  # Verify that the new scene card is present
-  waiter.wait_and_assert(
-    EC.presence_of_element_located((By.XPATH, f"//div[@class='card' and @name='{name_of_new_scene}']")),
-    error_message=f"Scene card with name '{name_of_new_scene}' is not present on the page"
-  )
+    # Verify that the new scene card is present
+    waiter.wait_and_assert(
+        EC.presence_of_element_located((By.XPATH, f"//div[@class='card' and @name='{name_of_new_scene}']")),
+        error_message=f"Scene card with name '{name_of_new_scene}' is not present on the page"
+    )
 
 def interact_with_help_section(waiter, tab_id, help_button_id, modal_id):
   """Interact with a help section by clicking the tab, help button, and closing the modal."""
@@ -180,6 +180,12 @@ def test_remote_intersection_demo_availability_docker(waiter):
 
   verify_intersection_demo_availability(waiter, SCENESCAPE_REMOTE_URL)
 
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13923")
+def test_add_scene_kubernetes(waiter):
+    """Test that the admin can add a new scene."""
+    name_of_new_scene = "scene_NEX-T13923"
+    create_and_verify_scene(waiter, name_of_new_scene, url=get_scenescape_kubernetes_url())
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9380")
@@ -188,29 +194,40 @@ def test_add_scene_docker(waiter):
   name_of_new_scene = "new_scene_NEX-T9380"
   create_and_verify_scene(waiter, name_of_new_scene)
 
+def delete_scene_functionality_check(waiter, scene_name, url=SCENESCAPE_URL):
+    """
+    Helper function to create and delete a scene, verifying deletion.
+    """
+    create_and_verify_scene(waiter, scene_name, url)
+
+    # Find the 'Delete' link within the scene card and click it
+    delete_link = waiter.wait_and_assert(
+        EC.presence_of_element_located((By.XPATH, f"//div[@class='card' and @name='{scene_name}']//a[@name='Delete']")),
+        error_message=f"Delete link for scene '{scene_name}' is not present on the page"
+    )
+    delete_link.click()
+
+    # Verify that the confirmation button is present and click it
+    confirm_delete_button = waiter.wait_and_assert(
+        EC.presence_of_element_located((By.XPATH, "//input[@class='btn btn-primary' and @value='Yes, Delete the Scene!']")),
+        error_message="Confirmation button 'Yes, Delete the Scene!' is not present on the page"
+    )
+    confirm_delete_button.click()
+
+    # Verify that the scene card is no longer present
+    waiter.wait_and_assert(
+        EC.invisibility_of_element_located((By.XPATH, f"//div[@class='card' and @name='{scene_name}']")),
+        error_message=f"Scene card with name '{scene_name}' is still present on the page after deletion"
+    )
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13924")
+def test_delete_scene_kubernetes(waiter):
+    """Test that the admin can add and delete a new scene."""
+    delete_scene_functionality_check(waiter, "scene_NEX-T13924", url=get_scenescape_kubernetes_url())
+
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9381")
 def test_delete_scene_docker(waiter):
-  """Test that the admin can add and delete a new scene."""
-  name_of_new_scene = "new_scene_NEX-T9381"
-  create_and_verify_scene(waiter, name_of_new_scene)
-
-  # Find the 'Delete' link within the scene card and click it
-  delete_link = waiter.wait_and_assert(
-    EC.presence_of_element_located((By.XPATH, f"//div[@class='card' and @name='{name_of_new_scene}']//a[@name='Delete']")),
-    error_message=f"Delete link for scene '{name_of_new_scene}' is not present on the page"
-  )
-  delete_link.click()
-
-  # Verify that the confirmation button is present and click it
-  confirm_delete_button = waiter.wait_and_assert(
-    EC.presence_of_element_located((By.XPATH, "//input[@class='btn btn-primary' and @value='Yes, Delete the Scene!']")),
-    error_message="Confirmation button 'Yes, Delete the Scene!' is not present on the page"
-  )
-  confirm_delete_button.click()
-
-  # Verify that the scene card is no longer present
-  waiter.wait_and_assert(
-    EC.invisibility_of_element_located((By.XPATH, f"//div[@class='card' and @name='{name_of_new_scene}']")),
-    error_message=f"Scene card with name '{name_of_new_scene}' is still present on the page after deletion"
-  )
+    """Test that the admin can add and delete a new scene."""
+    delete_scene_functionality_check(waiter, "new_scene_NEX-T9381")
