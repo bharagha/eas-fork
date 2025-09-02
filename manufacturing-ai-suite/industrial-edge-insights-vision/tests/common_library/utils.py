@@ -204,6 +204,19 @@ class utils:
         time.sleep(5)
         os.chdir('{}'.format(self.path + "/manufacturing-ai-suite/industrial-edge-insights-vision"))
         print("\n\n**********Starting pipeline 'pallet_defect_detection' with sample_start.sh**********")
+        print("\n\n**********Checking pipeline status with sample_status.sh**********")
+        try:
+            status_output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
+            print(f"sample_status.sh output:\n{status_output}")
+            # Check if output contains empty array []
+            if "[]" not in status_output:
+                raise Exception("Pipelines are already running")
+            print("No pipelines are currently running - ready to start new pipeline")
+        except Exception as e:
+            logging.error(str(e))
+            raise
+
+        time.sleep(2)
         try:
             if value.get("type")=="pdd":
                 output = subprocess.check_output("./sample_start.sh -p pallet_defect_detection", shell=True, executable='/bin/bash')
