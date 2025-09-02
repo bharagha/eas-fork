@@ -43,4 +43,4 @@ tomli==2.0.1
 
 # 3D render client
 python-socketio==5.11.3
-eventlet==0.37.0
+eventlet==0.40.3
