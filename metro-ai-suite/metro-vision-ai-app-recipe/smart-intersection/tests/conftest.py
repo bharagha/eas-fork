@@ -154,10 +154,6 @@ def wait_for_pods_ready(namespace, timeout=300, interval=10):
 def setup_environment(request):
   """Set up Docker or Kubernetes environment for testing."""
   
-  # Clean up any existing port forwarding processes from previous runs
-  logger.info("Cleaning up any existing port forwarding processes...")
-  run_command("pkill -f 'kubectl.*port-forward' || true")
-  
   # Initialize port forwarding process variables  
   web_port_forward_process = None
   grafana_port_forward_process = None
@@ -171,6 +167,10 @@ def setup_environment(request):
   remote_nodered_port_forward_process = None
   
   if "kubernetes" in request.config.getoption("markexpr"):
+      # Clean up any existing port forwarding processes from previous runs
+      logger.info("Cleaning up any existing port forwarding processes...")
+      run_command("pkill -f 'kubectl.*port-forward' || true")
+
       logger.info("Deploying Kubernetes environment...")
       out, err, code = run_command(
         "helm upgrade --install smart-intersection ./chart "
