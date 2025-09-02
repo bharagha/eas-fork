@@ -77,12 +77,10 @@ def login_functionality(waiter, url):
   )
   logger.info("Login verification completed")
 
-@pytest.mark.docker
-@pytest.mark.zephyr_id("NEX-T9390")
-def test_logout_docker(waiter):
-  """Test that the admin logout functionality works correctly."""
+def logout_functionality_check(waiter, url):
+  """Common function to perform logout test."""
   waiter.perform_login(
-    SCENESCAPE_URL,
+    url,
     By.ID, "username",
     By.ID, "password",
     By.ID, "login-submit",
@@ -102,12 +100,10 @@ def test_logout_docker(waiter):
     error_message='"username" input field not found within 10 seconds'
   )
 
-@pytest.mark.docker
-@pytest.mark.zephyr_id("NEX-T9388")
-def test_change_password_docker(waiter):
-  """Test that the admin can change the password successfully."""
+def change_password_functionality_check(waiter, url):
+  """Common function to test that the admin can change the password successfully."""
   waiter.perform_login(
-    SCENESCAPE_URL,
+    url,
     By.ID, "username",
     By.ID, "password",
     By.ID, "login-submit",
@@ -121,7 +117,7 @@ def test_change_password_docker(waiter):
   )
 
   # Navigate to Password change page
-  waiter.driver.get(SCENESCAPE_URL + "/admin/password_change")
+  waiter.driver.get(url + "/admin/password_change")
 
   # Wait for the 'Change my password' button to be present
   change_password_button = waiter.wait_and_assert(
@@ -145,6 +141,30 @@ def test_change_password_docker(waiter):
     EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Password change successful"),
     error_message='"Password change successful" message not found within 10 seconds'
   )
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13911")
+def test_logout_kubernetes(waiter):
+  """Test that the admin logout functionality works correctly."""
+  logout_functionality_check(waiter, get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9390")
+def test_logout_docker(waiter):
+  """Test that the admin logout functionality works correctly."""
+  logout_functionality_check(waiter, SCENESCAPE_URL)
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13912")
+def test_change_password_kuberentes(waiter):
+  """Test that the admin can change the password successfully."""
+  change_password_functionality_check(waiter, get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9388")
+def test_change_password_docker(waiter):
+  """Test that the admin can change the password successfully."""
+  change_password_functionality_check(waiter, SCENESCAPE_URL)
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T10683")
