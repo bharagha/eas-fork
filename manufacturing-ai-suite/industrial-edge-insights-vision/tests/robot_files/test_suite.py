@@ -21,6 +21,16 @@ class test_suite(unittest.TestCase):
         ret = subprocess.call("nosetests3 --nocapture -v ../functional_tests/apps.py:TestCaseManager.test_apps", shell=True, env=env)
         return ret
     
+    def TC_003_app(self):
+        env["TEST_CASE"] = "APP003"
+        ret = subprocess.call("nosetests3 --nocapture -v ../functional_tests/apps.py:TestCaseManager.test_apps", shell=True, env=env)
+        return ret
+    
+    def TC_004_app(self):
+        env["TEST_CASE"] = "APP004"
+        ret = subprocess.call("nosetests3 --nocapture -v ../functional_tests/apps.py:TestCaseManager.test_apps", shell=True, env=env)
+        return ret
+    
    
 
 

@@ -16,6 +16,19 @@ App_Test_case_002
     Should Not Be Equal As Integers    ${status}    1
     RETURN         Run Keyword And Return Status    ${status}
 
+App_Test_case_003
+    [Documentation]      Verify Happy Path for PCB - CPU
+    ${status}          TC_003_APP
+    Should Not Be Equal As Integers    ${status}    1
+    RETURN         Run Keyword And Return Status    ${status}
+
+App_Test_case_004
+    [Documentation]      Verify Happy Path for Worker Safety - CPU
+    ${status}          TC_004_APP
+    Should Not Be Equal As Integers    ${status}    1
+    RETURN         Run Keyword And Return Status    ${status}
+
+
 
 
 ***Test Cases***
@@ -33,3 +46,16 @@ APP_TC_002
     [Tags]      app
     ${Status}    Run Keyword And Return Status   App_Test_case_002
     Should Not Be Equal As Integers    ${Status}    0
+
+APP_TC_003
+    [Documentation]    Verify Happy Path for PCB - CPU
+    [Tags]      app
+    ${Status}    Run Keyword And Return Status   App_Test_case_003
+    Should Not Be Equal As Integers    ${Status}    0
+
+APP_TC_004
+    [Documentation]    Verify Happy Path for Worker Safety - CPU
+    [Tags]      app
+    ${Status}    Run Keyword And Return Status   App_Test_case_004
+    Should Not Be Equal As Integers    ${Status}    0
+

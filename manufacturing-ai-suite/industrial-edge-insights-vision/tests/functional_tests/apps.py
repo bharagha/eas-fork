@@ -18,8 +18,9 @@ class TestCaseManager(BaseTest):
         key, value = self.utils.json_reader(test_case, JSONPATH)
         self.utils.docker_compose_up(value)
         time.sleep(5)
-        self.utils.list_pipelines()
+        self.utils.list_pipelines(value)
         self.utils.start_pipeline_and_check(value)
+        self.utils.get_pipeline_status()
         time.sleep(5)
         self.utils.container_logs_checker_dlsps(test_case,value)
 

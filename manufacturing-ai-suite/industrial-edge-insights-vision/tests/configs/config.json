@@ -2,11 +2,21 @@
    "APP001": {
       "type": "pdd",
       "device": "CPU",
-      "dlsps_log_param" : ["fps","number-streams=1"]
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
    },
    "APP002": {
       "type": "weld",
       "device": "CPU",
-      "dlsps_log_param" : ["fps","number-streams=1"]
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "APP003": {
+      "type": "pcb",
+      "device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "APP004": {
+      "type": "wsg",
+      "device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
    }
 }

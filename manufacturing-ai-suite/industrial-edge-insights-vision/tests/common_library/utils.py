@@ -22,6 +22,7 @@ class utils:
         """Initialize the utils class with the base path."""
         self.path = repo_path
 
+
     def json_reader(self, tc, JSON_PATH):
         """
         Read a JSON file and return the value for the given test case key.
@@ -41,6 +42,7 @@ class utils:
                 print("Test Case : ", key, "\nValue : ", value)
                 return key, value
 
+
     def docker_compose_up(self, value):
         """
         Prepare the environment and start docker compose services for the test.
@@ -56,7 +58,11 @@ class utils:
             subprocess.check_output("cp .env_pallet_defect_detection .env", shell=True, executable='/bin/bash')
         elif value.get("type") == "weld":
             subprocess.check_output("cp .env_weld_porosity_classification .env", shell=True, executable='/bin/bash')
-        
+        elif value.get("type") == "pcb":
+            subprocess.check_output("cp .env_pcb_anomaly_detection .env", shell=True, executable='/bin/bash')
+        elif value.get("type") == "wsg":
+            subprocess.check_output("cp .env_worker_safety_gear_detection .env", shell=True, executable='/bin/bash')
+
         print('\n**********Updating .env file**********')
         env_path = ".env"
         env_updates = {
@@ -87,28 +93,106 @@ class utils:
             logging.error(f"Failed to start services with docker compose. Command: {e.cmd}, Return Code: {e.returncode}, Output: {e.output}")
             raise
 
-    def list_pipelines(self):
+
+    def list_pipelines(self, value):
         """
         List the available pipelines using sample_list.sh and check server status.
+        Parse pipeline names from config file and verify they match loaded pipeline versions.
+        Maps "version" field from server output with "name" field from config file.
         Raises an exception if pipelines are not loaded or server is unreachable.
         """
         print('\n\n**********List pipelines sample_list.sh**********')
+        
         try:
-            output = subprocess.check_output("./sample_list.sh", shell=True, executable='/bin/bash')
-            output = output.decode('utf-8')  # Decode bytes to string
-            print(f"sample_list.sh output:\n{output}")
+            # Get config path based on type
+            config_paths = {
+                "pdd": "apps/pallet-defect-detection/configs/pipeline-server-config.json",
+                "weld": "apps/weld-porosity/configs/pipeline-server-config.json", 
+                "pcb": "apps/pcb-anomaly-detection/configs/pipeline-server-config.json",
+                "wsg": "apps/worker-safety-gear-detection/configs/pipeline-server-config.json"
+            }
+            config_path = os.path.join(self.path, "manufacturing-ai-suite/industrial-edge-insights-vision", 
+                                       config_paths.get(value.get("type"), config_paths["pdd"]))
+            
+            # Parse expected pipeline names
+            expected_pipelines = []
+            try:
+                with open(config_path, 'r') as f:
+                    config_data = json.load(f)
+                    expected_pipelines = [p.get("name") for p in config_data.get("config", {}).get("pipelines", []) if p.get("name")]
+                    print(f"Expected pipeline names: {expected_pipelines}")
+            except FileNotFoundError:
+                raise Exception(f"Config file not found: {config_path}")
+            except json.JSONDecodeError as e:
+                raise Exception(f"Invalid JSON in config file: {e}")
+            except Exception as e:
+                raise Exception(f"Error reading config file: {e}")
+            
+            # Execute sample_list.sh and parse output
+            try:
+                output = subprocess.check_output("./sample_list.sh", shell=True, executable='/bin/bash').decode('utf-8')
+                print(f"sample_list.sh output:\n{output}")
+            except subprocess.CalledProcessError as e:
+                raise Exception(f"Failed to execute sample_list.sh: {e}")
+            except Exception as e:
+                raise Exception(f"Error running sample_list.sh: {e}")
+            
             if "HTTP Status Code: 200" not in output:
                 raise Exception("Server is not reachable. HTTP Status Code is not 200.")
-            if "Loaded pipelines:" in output:
-                pipelines = output.split("Loaded pipelines:")[1].strip()
-                if not pipelines:
-                    raise Exception("Loaded pipelines list is empty.")
-                print("Server is reachable, and pipelines are loaded successfully.")
-            else:
+            if "Loaded pipelines:" not in output:
                 raise Exception("Loaded pipelines information is missing in the output.")
+            pipelines_section = output.split("Loaded pipelines:")[1].strip()
+            if not pipelines_section:
+                raise Exception("Loaded pipelines list is empty.")
+            
+            # Parse loaded pipeline versions from JSON
+            loaded_pipeline_versions = []
+            try:
+                json_start, json_end = pipelines_section.find('['), pipelines_section.rfind(']') + 1
+                if json_start != -1 and json_end != 0:
+                    pipelines_data = json.loads(pipelines_section[json_start:json_end])
+                    loaded_pipeline_versions = [p['version'] for p in pipelines_data if isinstance(p, dict) and 'version' in p]
+                else:
+                    raise Exception("No valid JSON array found in pipelines output")
+            except json.JSONDecodeError as e:
+                print(f"Error parsing JSON: {e}, falling back to text parsing...")
+                try:
+                    loaded_pipeline_versions = [line.replace('-', '').strip() for line in pipelines_section.split('\n') 
+                                              if line.strip() and line.startswith('-')]
+                    if not loaded_pipeline_versions:
+                        raise Exception("No pipelines found in text parsing fallback")
+                except Exception as fallback_error:
+                    raise Exception(f"Failed to parse pipelines from output: {fallback_error}")
+            print(f"Loaded pipeline versions: {loaded_pipeline_versions}")
+            if not loaded_pipeline_versions:
+                raise Exception("No pipeline versions found in server output")
+            
+            # Validate matching
+            if expected_pipelines:
+                unmatched_versions = [v for v in loaded_pipeline_versions if v not in expected_pipelines]
+                missing_names = [n for n in expected_pipelines if n not in loaded_pipeline_versions]
+                matched_pipelines = [v for v in loaded_pipeline_versions if v in expected_pipelines]
+                
+                print("\n**********Pipeline Name to Version Mapping**********")
+                for name in expected_pipelines:
+                    if name in loaded_pipeline_versions:
+                        print(f"✓ MATCH: name='{name}' maps to version='{name}'")
+                    else:
+                        print(f"✗ MISSING: name='{name}' not found in loaded versions")
+                for version in unmatched_versions:
+                    print(f"✗ UNMATCHED: version='{version}' not found in config names")
+                print(f"\nSummary: {len(matched_pipelines)} matched, {len(unmatched_versions)} unmatched, {len(missing_names)} missing")
+                if unmatched_versions or missing_names:
+                    error_msg = f"Pipeline mismatch - Unmatched: {unmatched_versions}, Missing: {missing_names}"
+                    raise Exception(error_msg)
+                print("SUCCESS: All pipeline versions match expected names.")
+            else:
+                raise Exception("No expected pipelines found in config file")
+            print("Server is reachable, and pipelines are loaded successfully.")
         except Exception as e:
             logging.error(str(e))
             raise
+     
 
     def start_pipeline_and_check(self, value):
         """
@@ -125,20 +209,48 @@ class utils:
                 output = subprocess.check_output("./sample_start.sh -p pallet_defect_detection", shell=True, executable='/bin/bash')
             elif value.get("type")=="weld":
                 output = subprocess.check_output("./sample_start.sh -p weld_porosity_classification", shell=True, executable='/bin/bash')
+            elif value.get("type")=="pcb":
+                output = subprocess.check_output("./sample_start.sh -p pcb_anomaly_detection", shell=True, executable='/bin/bash')
+            elif value.get("type")=="wsg":
+                output = subprocess.check_output("./sample_start.sh -p worker_safety_gear_detection", shell=True, executable='/bin/bash')
             output = output.decode('utf-8')  # Decode bytes to string
             print(f"sample_start.sh output:\n{output}")
 
             success_message = "posted successfully"
             if success_message not in output:
                 raise Exception(f"Pipeline start failed. Expected message not found: '{success_message}'")
+            
+            # Extract response text after "posted successfully"
             response_index = output.find(success_message) + len(success_message)
-            response_string = output[response_index:].strip()
-            if not response_string:
+            response_text = output[response_index:].strip()
+            if not response_text:
                 raise Exception("Response string is empty after posting payload.")
+            
+            print(f"Response text: {response_text}")
             print("Pipeline started successfully, and response string is valid.")
+            return response_text
         except Exception as e:
             logging.error(str(e))
             raise
+
+    
+    def get_pipeline_status(self):
+        """
+        Check pipeline status using sample_status.sh. Raises exception if not RUNNING.
+        """
+        time.sleep(5)
+        os.chdir('{}'.format(self.path + "/manufacturing-ai-suite/industrial-edge-insights-vision"))
+        print("\n\n**********Checking pipeline status with sample_status.sh**********")
+        try:
+            output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
+            print(f"sample_status.sh output:\n{output}")
+            if "RUNNING" not in output:
+                raise Exception("No RUNNING pipelines found in output")
+            print("Pipeline is running")
+        except Exception as e:
+            logging.error(str(e))
+            raise
+
 
     def container_logs_checker_dlsps(self, tc, value):
         """
@@ -166,6 +278,7 @@ class utils:
             print("FAIL: Keywords not found in logs.")
             return False
 
+
     def search_element(self, logFile, keyword):
         """
         Searches for a specific keyword in a log file.
@@ -192,10 +305,12 @@ class utils:
             print("FAIL:Keyword NOT Found", keyword)
             return False
 
+
     def stop_pipeline_and_check(self):
         """
         Stop the pipeline using sample_stop.sh and check for success.
-        Raises an exception if the pipeline does not stop successfully.
+        Then verify the pipeline status is ABORTED using sample_status.sh.
+        Raises an exception if the pipeline does not stop successfully or is still running.
         """
         print("\n\n**********Stopping pipeline with sample_stop.sh**********")
         try:
@@ -205,7 +320,18 @@ class utils:
             success_message = "stopped successfully"
             if success_message not in output:
                 raise Exception(f"Pipeline stop failed. Expected message not found: '{success_message}'")
-            print("Pipeline stopped successfully.")
+            print("Pipeline stopped.")
+        except Exception as e:
+            logging.error(str(e))
+            raise
+        time.sleep(2)
+        print("\n\n**********Checking pipeline status with sample_status.sh**********")
+        try:
+            output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
+            print(f"sample_status.sh output:\n{output}")
+            if "ABORTED" not in output:
+                raise Exception("RUNNING pipelines found in output")
+            print("Pipeline is stopped successfully.")
         except Exception as e:
             logging.error(str(e))
             raise
