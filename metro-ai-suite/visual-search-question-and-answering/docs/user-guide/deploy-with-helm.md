@@ -18,17 +18,17 @@ Do the following to deploy VSQA using Helm chart.
 git clone https://github.com/open-edge-platform/edge-ai-suites.git -b release-1.2.0
 ```
 
-#### Step 2: Change to the Chart Directory
+### Step 2: Change to the Chart Directory
 
 ```bash
 cd cd edge-ai-suites/metro-ai-suite/visual-search-question-and-answering/deployment/helm-chart
 ```
 
-#### Step 3: Configure the `values.yaml` File
+### Step 3: Configure the `values.yaml` File
 
 Edit the `values.yaml` file to set the necessary environment variables. At minimum, ensure you set the models, and proxy settings as required. Supported models can be found below:
 
-##### Supported Local Embedding Models
+#### Supported Local Embedding Models
 
 | Model Name                          | Search in English | Search in Chinese | Remarks|
 |-------------------------------------|----------------------|---------------------|---------------|
@@ -37,13 +37,13 @@ Edit the `values.yaml` file to set the necessary environment variables. At minim
 
 When prompting `Please enter the VLM_MODEL_NAME`, choose one model name from table below and input
 
-##### Supported VLM Models
+#### Supported VLM Models
 
 | Model Name                          | Single Image Support | Multi-Image Support | Video Support | Hardware Support                |
 |-------------------------------------|----------------------|---------------------|---------------|---------------------------------|
 | Qwen/Qwen2.5-VL-7B-Instruct         | Yes                  | Yes                 | Yes           | GPU                       |
 
-##### Settings to be configured
+#### Settings to be configured
 | Key | Description | Example Value |
 | --- | ----------- | ------------- |
 | `global.proxy.http_proxy` | HTTP proxy if required | `http://proxy-example.com:000` |
@@ -95,7 +95,7 @@ Note that RESTARTS are possible, as long as the 3 pods stablized after a while, 
 
 ### Step 6: Deploy [intel-device-plugins-for-kubernetes](https://github.com/intel/intel-device-plugins-for-kubernetes)
 
-Follw these steps to install with NFD
+Follow these steps to install with NFD
 
 ```bash
 kubectl apply -k 'https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd?ref=v0.32.0'
