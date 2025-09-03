@@ -9,7 +9,8 @@ import subprocess
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
-from tests.utils.utils import get_node_port, check_urls_access
+from tests.utils.kubernetes_utils import get_node_port
+from tests.utils.utils import check_urls_access
 from .conftest import (
   SCENESCAPE_URL,
   get_scenescape_kubernetes_url,
