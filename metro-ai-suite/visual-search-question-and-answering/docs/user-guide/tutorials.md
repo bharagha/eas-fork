@@ -30,7 +30,7 @@ In this tutorial, you will learn how to use your own dataset for searching.
 
 2. Go to the web UI, fill in `file directory on host` with the absolute path to your dataset directory, and click `UpdateDB`
 
-### Summary
+**Summary**
 
 In this tutorial, you learned how to use your own dataset for searching.
 
@@ -128,7 +128,7 @@ Figure 2: Search with filter
 
 ### Supported filters
 
-### Summary
+**Summary**
 
 In this tutorial, you learned how to: ingest data with metadata (both via providing a json file or via API), and search with filters enabled
 
