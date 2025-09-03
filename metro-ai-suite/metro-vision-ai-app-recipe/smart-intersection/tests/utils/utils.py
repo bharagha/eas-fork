@@ -21,19 +21,6 @@ def run_command(cmd):
   out, err = proc.communicate()
   return out.decode(), err.decode(), proc.returncode
 
-def get_node_port(service_name, namespace):
-  """Get the NodePort for a given service."""
-  logger.info(f"Attempting to get NodePort for service '{service_name}' in namespace '{namespace}'")
-  result = subprocess.run(
-    ["kubectl", "get", "service", service_name, "-n", namespace, "-o", "jsonpath={.spec.ports[0].nodePort}"],
-    capture_output=True, text=True
-  )
-  if result.returncode != 0:
-    logger.error(f"Failed to get NodePort: {result.stderr}")
-    raise RuntimeError("Failed to get NodePort")
-  node_port = result.stdout.strip()
-  logger.info(f"NodePort for service '{service_name}' is '{node_port}'")
-  return node_port
 
 def read_from_file(file_path):
   """Read content from a specified file."""
