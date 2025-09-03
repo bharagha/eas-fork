@@ -13,10 +13,16 @@ from dotenv import load_dotenv
 from tests.utils.utils import (
   run_command,
   check_url_access,
-  get_node_port,
   get_password_from_supass_file,
   get_username_from_influxdb2_admin_username_file,
   get_password_from_influxdb2_admin_password_file
+)
+from tests.utils.kubernetes_utils import (
+  get_scenescape_kubernetes_url,
+  get_pod_name,
+  start_port_forwarding,
+  wait_for_pods_ready,
+  get_node_port,
 )
 
 load_dotenv()
@@ -43,27 +49,6 @@ NODE_RED_REMOTE_URL = os.getenv("NODE_RED_REMOTE_URL")
 
 PROJECT_GITHUB_URL = os.getenv("PROJECT_GITHUB_URL", "https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/smart-intersection")
 
-# This will be set dynamically during Kubernetes setup
-SCENESCAPE_KUBERNETES_URL = None
-
-def get_scenescape_kubernetes_url():
-  """Get the Kubernetes URL for Scenescape service."""
-  if SCENESCAPE_KUBERNETES_URL is None:
-    web_node_port = get_node_port("smart-intersection-web", "smart-intersection")
-    return f"{SCENESCAPE_URL}:{web_node_port}"
-  return SCENESCAPE_KUBERNETES_URL
-
-def get_pod_name(service_name, namespace="smart-intersection"):
-  """Get the name of the first pod for a given service."""
-  cmd = f"kubectl get pods -n {namespace} -l app={service_name} -o jsonpath='{{.items[0].metadata.name}}'"
-  return subprocess.check_output(cmd, shell=True).decode().strip()
-
-def start_port_forwarding(service_name, local_port, remote_port, namespace="smart-intersection"):
-  """Start port forwarding for a service and return the process."""
-  pod_name = get_pod_name(service_name, namespace)
-  cmd = f"kubectl -n {namespace} port-forward {pod_name} {local_port}:{remote_port}"
-  logger.info(f"Starting port forwarding for {service_name}: localhost:{local_port}")
-  return subprocess.Popen(cmd, shell=True)
 
 def start_remote_port_forwarding(service_name, remote_host, local_port, remote_port, namespace="smart-intersection"):
   """Start remote port forwarding for a service and return the process."""
@@ -83,18 +68,6 @@ def start_remote_port_forwarding(service_name, remote_host, local_port, remote_p
   logger.info(f"Starting remote port forwarding for {service_name}: {remote_host}:{local_port}")
   return subprocess.Popen(cmd, shell=True)
 
-def stop_port_forwarding_process(process_name, process):
-  """Safely stop a port forwarding process."""
-  if process and process.poll() is None:  # Check if process is still running
-    try:
-      logger.info(f"Terminating {process_name} port forwarding...")
-      process.terminate()
-      process.wait(timeout=5)  # Wait up to 5 seconds for clean termination
-    except subprocess.TimeoutExpired:
-      logger.warning(f"Force killing {process_name} port forwarding...")
-      process.kill()
-    except Exception as e:
-      logger.error(f"Error stopping {process_name} port forwarding: {e}")
 
 def are_remote_urls_configured():
   """Check if any remote URLs are configured in the environment."""
@@ -130,47 +103,12 @@ def wait_for_services_readiness(services_urls, timeout=120, interval=2):
     time.sleep(interval)
   raise TimeoutError("Services did not become ready in time.")
 
-def wait_for_pods_ready(namespace, timeout=300, interval=10):
-  """Wait for all pods in the specified namespace to be in 'Running' state."""
-  start_time = time.time()
-  while time.time() - start_time < timeout:
-    out, err, code = run_command(f"kubectl get pods -n {namespace} --no-headers")
-    if code != 0:
-      logger.error(f"Failed to get pods: {err}")
-      raise RuntimeError("Failed to get pods status")
-
-    pods = out.strip().split("\n")
-    all_running = all("Running" in pod for pod in pods)
-    if all_running:
-      logger.info("All pods are in 'Running' state.")
-      return True
-
-    logger.info("Waiting for pods to be ready...")
-    time.sleep(interval)
-
-  raise TimeoutError("Pods did not become ready in time.")
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_environment(request):
   """Set up Docker or Kubernetes environment for testing."""
   
-  # Initialize port forwarding process variables  
-  web_port_forward_process = None
-  grafana_port_forward_process = None
-  influxdb_port_forward_process = None
-  nodered_port_forward_process = None
-  
-  # Remote port forwarding process variables
-  remote_web_port_forward_process = None
-  remote_grafana_port_forward_process = None
-  remote_influxdb_port_forward_process = None
-  remote_nodered_port_forward_process = None
-  
   if "kubernetes" in request.config.getoption("markexpr"):
-      # Clean up any existing port forwarding processes from previous runs
-      logger.info("Cleaning up any existing port forwarding processes...")
-      run_command("pkill -f 'kubectl.*port-forward' || true")
-
       logger.info("Deploying Kubernetes environment...")
       out, err, code = run_command(
         "helm upgrade --install smart-intersection ./chart "
@@ -193,10 +131,10 @@ def setup_environment(request):
       logger.info(f"SCENESCAPE_KUBERNETES_URL set to: {SCENESCAPE_KUBERNETES_URL}")
 
       # Start port forwarding for localhost access only
-      web_port_forward_process = start_port_forwarding("smart-intersection-web", web_node_port, 443)
-      grafana_port_forward_process = start_port_forwarding("smart-intersection-grafana", 3000, 3000)
-      influxdb_port_forward_process = start_port_forwarding("smart-intersection-influxdb", 8086, 8086)
-      nodered_port_forward_process = start_port_forwarding("smart-intersection-nodered", 1880, 1880)
+      start_port_forwarding("smart-intersection-web", web_node_port, 443)
+      start_port_forwarding("smart-intersection-grafana", 3000, 3000)
+      start_port_forwarding("smart-intersection-influxdb", 8086, 8086)
+      start_port_forwarding("smart-intersection-nodered", 1880, 1880)
 
       # Check service readiness
       localhost_services_urls = [
@@ -213,28 +151,27 @@ def setup_environment(request):
           parsed = urllib.parse.urlparse(SCENESCAPE_REMOTE_URL)
           logger.info(f"SCENESCAPE_REMOTE_URL: {SCENESCAPE_REMOTE_URL}")
           logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          remote_web_port_forward_process = start_remote_port_forwarding("smart-intersection-web", parsed.hostname, 443, 443)
+          start_remote_port_forwarding("smart-intersection-web", parsed.hostname, 443, 443)
           
         if GRAFANA_REMOTE_URL:
           parsed = urllib.parse.urlparse(GRAFANA_REMOTE_URL)
           logger.info(f"GRAFANA_REMOTE_URL: {GRAFANA_REMOTE_URL}")
           logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          remote_grafana_port_forward_process = start_remote_port_forwarding("smart-intersection-grafana", parsed.hostname, parsed.port, 3000)
+          start_remote_port_forwarding("smart-intersection-grafana", parsed.hostname, parsed.port, 3000)
           
         if INFLUX_REMOTE_DB_URL:
           parsed = urllib.parse.urlparse(INFLUX_REMOTE_DB_URL)
           logger.info(f"INFLUX_REMOTE_DB_URL: {INFLUX_REMOTE_DB_URL}")
           logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          remote_influxdb_port_forward_process = start_remote_port_forwarding("smart-intersection-influxdb", parsed.hostname, parsed.port, 8086)
+          start_remote_port_forwarding("smart-intersection-influxdb", parsed.hostname, parsed.port, 8086)
           
         if NODE_RED_REMOTE_URL:
           parsed = urllib.parse.urlparse(NODE_RED_REMOTE_URL)
           logger.info(f"NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
           logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          remote_nodered_port_forward_process = start_remote_port_forwarding("smart-intersection-nodered", parsed.hostname, parsed.port, 1880)
+          start_remote_port_forwarding("smart-intersection-nodered", parsed.hostname, parsed.port, 1880)
       else:
         logger.info("No remote URLs configured, skipping remote port forwarding.")
-
   else:
     logger.info("Building and deploying Docker containers...")
     out, err, code = run_command("docker compose up -d")
@@ -251,20 +188,13 @@ def setup_environment(request):
   if "kubernetes" in request.config.getoption("markexpr"):
     logger.info("Tearing down Kubernetes environment...")
     
-    # Stop port forwarding processes first
-    for process_name, process in [
-      ("web", web_port_forward_process),
-      ("grafana", grafana_port_forward_process), 
-      ("influxdb", influxdb_port_forward_process),
-      ("nodered", nodered_port_forward_process),
-      ("remote-web", remote_web_port_forward_process),
-      ("remote-grafana", remote_grafana_port_forward_process),
-      ("remote-influxdb", remote_influxdb_port_forward_process),
-      ("remote-nodered", remote_nodered_port_forward_process)
-    ]:
-      stop_port_forwarding_process(process_name, process)
-    
-    logger.info("Port forwarding stopped.")
+    # Cleanup: kill all kubectl port-forward processes for namespace smart-intersection
+    try:
+      logger.info("Killing kubectl port-forward processes for namespace smart-intersection...")
+      subprocess.run("ps aux | grep 'kubectl -n smart-intersection port-forward' | awk '{print $2}' | xargs -r kill", shell=True)
+      logger.info("Port forwarding stopped.")
+    except Exception as e:
+      logger.error(f"Error killing kubectl port-forward processes for smart-intersection: {e}")
     
     # Clean up Kubernetes resources  
     run_command("helm uninstall smart-intersection -n smart-intersection")
