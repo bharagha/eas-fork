@@ -27,6 +27,7 @@ warnings.filterwarnings(
     message=".*Threading.*parallel backend is not supported by Extension for Scikit-learn.*"
 )
 
+# from gcp_mqtt_client import get_client
 
 log_level = os.getenv('KAPACITOR_LOGGING_LEVEL', 'INFO').upper()
 enable_benchmarking = os.getenv('ENABLE_BENCHMARKING', 'false').upper() == 'TRUE'
@@ -53,9 +54,7 @@ class AnomalyDetectorHandler(Handler):
             with open(filename, 'rb') as f:
                 model = pickle.load(f)
             return model
-        model_name = (os.path.basename(__file__)).replace('.py', '.pkl')
-        model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                    "../models/" + model_name)
+        model_path = os.getenv('MODEL_PATH')
         model_path = os.path.abspath(model_path)
         self.rf = load_model(model_path)
 

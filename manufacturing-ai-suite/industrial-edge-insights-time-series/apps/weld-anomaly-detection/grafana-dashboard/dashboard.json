@@ -128,7 +128,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "wind_turbine_anomaly_data.anomaly_status"
+              "options": "wind-turbine-anomaly-data.anomaly_status"
             },
             "properties": [
               {
@@ -167,7 +167,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "wind_turbine_anomaly_data.wind_speed"
+              "options": "wind-turbine-anomaly-data.wind_speed"
             },
             "properties": [
               {
@@ -182,7 +182,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "wind_turbine_anomaly_data.grid_active_power"
+              "options": "wind-turbine-anomaly-data.grid_active_power"
             },
             "properties": [
               {
@@ -201,8 +201,8 @@
               "options": {
                 "mode": "exclude",
                 "names": [
-                  "wind_turbine_anomaly_data.anomaly_status",
-                  "wind_turbine_anomaly_data.grid_active_power"
+                  "wind-turbine-anomaly-data.anomaly_status",
+                  "wind-turbine-anomaly-data.grid_active_power"
                 ],
                 "prefix": "All except:",
                 "readOnly": true
@@ -256,7 +256,7 @@
           "filters": [],
           "format": "table",
           "global_query_id": "",
-          "query": "SELECT grid_active_power,wind_speed from wind_turbine_anomaly_data",
+          "query": "SELECT grid_active_power,wind_speed from \"wind-turbine-anomaly-data\"",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -289,10 +289,10 @@
             }
           ],
           "hide": false,
-          "measurement": "wind_turbine_anomaly_data",
+          "measurement": "wind-turbine-anomaly-data",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT anomaly_status FROM wind_turbine_anomaly_data where anomaly_status>0",
+          "query": "SELECT anomaly_status FROM \"wind-turbine-anomaly-data\" where anomaly_status>0",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -383,7 +383,7 @@
             "uid": "P951FEA4DE68E13C5"
           },
           "hide": false,
-          "query": "SELECT count(anomaly_status)  FROM \"wind_turbine_anomaly_data\" WHERE (\"anomaly_status\" =  0.3) ",
+          "query": "SELECT count(anomaly_status)  FROM \"wind-turbine-anomaly-data\" WHERE (\"anomaly_status\" =  0.3) ",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series"
@@ -459,7 +459,7 @@
             "uid": "P951FEA4DE68E13C5"
           },
           "hide": false,
-          "query": "SELECT count(anomaly_status) FROM \"wind_turbine_anomaly_data\" WHERE (\"anomaly_status\" =  0.6) ",
+          "query": "SELECT count(anomaly_status) FROM \"wind-turbine-anomaly-data\" WHERE (\"anomaly_status\" =  0.6) ",
           "rawQuery": true,
           "refId": "C",
           "resultFormat": "time_series"
@@ -535,7 +535,7 @@
             "uid": "P951FEA4DE68E13C5"
           },
           "hide": false,
-          "query": "SELECT count(anomaly_status) FROM \"wind_turbine_anomaly_data\" WHERE (\"anomaly_status\" =  1) ",
+          "query": "SELECT count(anomaly_status) FROM \"wind-turbine-anomaly-data\" WHERE (\"anomaly_status\" =  1) ",
           "rawQuery": true,
           "refId": "D",
           "resultFormat": "time_series"
@@ -618,10 +618,10 @@
               "type": "fill"
             }
           ],
-          "measurement": "wind_turbine_anomaly_data",
+          "measurement": "\"wind-turbine-anomaly-data\"",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT count(\"wind_speed\") FROM \"wind_turbine_anomaly_data\" where anomaly_status>0",
+          "query": "SELECT count(\"wind_speed\") FROM \"wind-turbine-anomaly-data\" where anomaly_status>0",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -694,7 +694,7 @@
       "pluginVersion": "12.0.0",
       "targets": [
         {
-          "query": "SELECT count(wind_speed) AS mean_value FROM wind_turbine_data\n",
+          "query": "SELECT count(wind_speed) AS mean_value FROM \"wind-turbine-data\"\n",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -766,10 +766,10 @@
               "type": "fill"
             }
           ],
-          "measurement": "wind_turbine_anomaly_data",
+          "measurement": "wind-turbine-anomaly-data",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT count(\"wind_speed\") FROM \"wind_turbine_anomaly_data\" ",
+          "query": "SELECT count(\"wind_speed\") FROM \"wind-turbine-anomaly-data\" ",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -842,7 +842,7 @@
       "pluginVersion": "12.0.0",
       "targets": [
         {
-          "query": "SELECT mean(mean_value) FROM (SELECT count(wind_speed) AS mean_value FROM wind_turbine_data  WHERE time > now() - 3m GROUP BY time(1m))\n",
+          "query": "SELECT mean(mean_value) FROM (SELECT count(wind_speed) AS mean_value FROM \"wind-turbine-data\"  WHERE time > now() - 3m GROUP BY time(1m))\n",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -900,7 +900,7 @@
       "pluginVersion": "12.0.0",
       "targets": [
         {
-          "query": "SELECT mean(mean_value) FROM (SELECT count(wind_speed) AS mean_value FROM wind_turbine_anomaly_data  WHERE time > now() - 3m GROUP BY time(1m))\n",
+          "query": "SELECT mean(mean_value) FROM (SELECT count(wind_speed) AS mean_value FROM \"wind-turbine-anomaly-data\"  WHERE time > now() - 3m GROUP BY time(1m))\n",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -966,7 +966,7 @@
             "type": "influxdb",
             "uid": "P951FEA4DE68E13C5"
           },
-          "query": "SELECT mean(mean_value) FROM (\n  SELECT mean(end_end_time)/1000000000 AS mean_value FROM wind_turbine_anomaly_data\n  WHERE analytic=1 and time > now() - 3m\n  GROUP BY time(1m)\n)\n",
+          "query": "SELECT mean(mean_value) FROM (\n  SELECT mean(end_end_time)/1000000000 AS mean_value FROM \"wind-turbine-anomaly-data\"\n  WHERE analytic=1 and time > now() - 3m\n  GROUP BY time(1m)\n)\n",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -1028,7 +1028,7 @@
       "pluginVersion": "12.0.0",
       "targets": [
         {
-          "query": " select mean(processing_time)/1000000000 from wind_turbine_anomaly_data where analytic=1 order by time desc",
+          "query": " select mean(processing_time)/1000000000 from \"wind-turbine-anomaly-data\" where analytic=1 order by time desc",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"

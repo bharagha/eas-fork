@@ -4,6 +4,24 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+DEFAULT_SAMPLE_APP := wind-turbine-anomaly-detection
+SAMPLE_APP_LIST := wind-turbine-anomaly-detection weld-anomaly-detection
+
+ifdef app
+ifeq ($(filter $(app),$(SAMPLE_APP_LIST)),)
+$(error Sample app '$(app)' not found. Valid options: $(SAMPLE_APP_LIST))
+endif
+SAMPLE_APP := $(app)
+else
+$(info Using default Sample app: $(DEFAULT_SAMPLE_APP))
+SAMPLE_APP := $(DEFAULT_SAMPLE_APP)
+endif
+
+app-%:
+	@true
+
+export SAMPLE_APP
+
 INCLUDE ?= default_INCLUDE
 
 DOCKER_COMPOSE_FILE = ./docker-compose.yml

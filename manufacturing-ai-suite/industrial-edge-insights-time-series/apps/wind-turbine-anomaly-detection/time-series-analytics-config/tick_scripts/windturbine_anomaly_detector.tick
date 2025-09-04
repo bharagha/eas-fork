@@ -4,13 +4,13 @@ var data0 = stream
         |from()
                 .database('datain')
                 .retentionPolicy('autogen')
-                .measurement('wind_turbine_data')
+                .measurement('wind-turbine-data')
         @windturbine_anomaly_detector()
 data0
         |influxDBOut()
                 .buffer(0)
                 .database('datain')
-                .measurement('wind_turbine_anomaly_data')
+                .measurement('wind-turbine-anomaly-data')
                 .retentionPolicy('autogen')
 data0
         |alert()
