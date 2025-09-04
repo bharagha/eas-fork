@@ -34,6 +34,7 @@
 
 - Prepare your environment according to the following guides:
   - [Get Started Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
+  - [Deploy with Helm (if you want to run Kubernetes tests)](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/how-to-deploy-helm.md)
 
 ## Installation
 

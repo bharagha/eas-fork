@@ -10,7 +10,7 @@ from tests.utils.ui_utils import waiter, driver
 from .conftest import SCENESCAPE_URL, SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD, get_scenescape_kubernetes_url
 
 
-def add_camera(waiter, camera_name, camera_id, url):
+def add_camera(waiter, camera_name, camera_id, url, deployment="docker"):
   """Helper function to log in and add a new camera."""
   # Perform login using Waiter class object
   waiter.perform_login(
@@ -46,6 +46,13 @@ def add_camera(waiter, camera_name, camera_id, url):
   id_name_input = waiter.driver.find_element(By.ID, "id_name")
   id_scene_select = waiter.driver.find_element(By.ID, "id_scene")
 
+  if deployment == "kubernetes":
+    id_command_input = waiter.driver.find_element(By.ID, "id_command")
+    id_camerachain_input = waiter.driver.find_element(By.ID, "id_camerachain")
+
+    id_command_input.send_keys("CommandInput")
+    id_camerachain_input.send_keys("CameraChainInput")
+  
   sensor_id_input.send_keys(camera_id)
   id_name_input.send_keys(camera_name)
   select = Select(id_scene_select)
@@ -61,7 +68,7 @@ def add_camera(waiter, camera_name, camera_id, url):
   )
   return camera_card
 
-def manage_cameras_functionality_check(waiter, url, camera_name, modified_camera_name):
+def manage_cameras_functionality_check(waiter, url, camera_name, modified_camera_name, deployment="docker"):
     """Common function to test camera management functionality."""
     waiter.perform_login(
         url,
@@ -94,6 +101,13 @@ def manage_cameras_functionality_check(waiter, url, camera_name, modified_camera
     id_name_input = waiter.driver.find_element(By.ID, "id_name")
     id_name_input.send_keys(modified_camera_name)
 
+    if deployment == "kubernetes":
+      id_command_input = waiter.driver.find_element(By.ID, "id_command")
+      id_camerachain_input = waiter.driver.find_element(By.ID, "id_camerachain")
+
+      id_command_input.send_keys("CommandInput")
+      id_camerachain_input.send_keys("CameraChainInput")
+
     save_button.click()
 
     # Verify that the modified name appears in the specified element
@@ -102,9 +116,9 @@ def manage_cameras_functionality_check(waiter, url, camera_name, modified_camera
         error_message="Modified camera name is not present in the header"
     )
 
-def delete_camera_functionality_check(waiter, camera_name, camera_id, url):
+def delete_camera_functionality_check(waiter, camera_name, camera_id, url, deployment="docker"):
   """Common function to test camera deletion functionality."""
-  camera_card = add_camera(waiter, camera_name, camera_id, url)
+  camera_card = add_camera(waiter, camera_name, camera_id, url, deployment)
 
   # Find the 'Delete' button for the specific camera and click it
   delete_button = waiter.wait_and_assert(
@@ -132,7 +146,9 @@ def test_manage_cameras_kubernetes(waiter):
   """Test that the admin can manage cameras."""
   camera_name = "west crosswalk view"
   modified_camera_name = "west crosswalk view modified"
-  manage_cameras_functionality_check(waiter, get_scenescape_kubernetes_url(), camera_name, modified_camera_name)
+  deployment = "kubernetes"
+
+  manage_cameras_functionality_check(waiter, get_scenescape_kubernetes_url(), camera_name, modified_camera_name, deployment)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9632")
@@ -148,8 +164,9 @@ def test_add_camera_kubernetes(waiter):
   """Test that the admin can add a new camera."""
   name_of_new_camera = "cam_T13914"
   id_of_new_camera = "cam_id_T13914"
+  deployment = "kubernetes"
 
-  add_camera(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url())
+  add_camera(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url(), deployment)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9382")
@@ -166,8 +183,9 @@ def test_delete_camera_kubernetes(waiter):
   """Test that the admin can delete a new camera."""
   name_of_new_camera = "cam_T13915"
   id_of_new_camera = "cam_id_T13915"
+  deployment = "kubernetes"
 
-  delete_camera_functionality_check(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url())
+  delete_camera_functionality_check(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url(), deployment)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9383")
