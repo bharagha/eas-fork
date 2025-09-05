@@ -57,4 +57,3 @@ def test_setup_kubernetes():
 def test_setup_docker():
   """Verify that secrets and videos have been set up."""
   setup_functionality_check()
-  
