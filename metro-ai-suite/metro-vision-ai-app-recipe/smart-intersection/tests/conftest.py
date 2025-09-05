@@ -109,64 +109,64 @@ def setup_environment(request):
   """Set up Docker or Kubernetes environment for testing."""
   
   if "kubernetes" in request.config.getoption("markexpr"):
-      logger.info("Deploying Kubernetes environment...")
-      out, err, code = run_command(
-        "helm upgrade --install smart-intersection ./chart "
-        "--create-namespace "
-        "--set grafana.service.type=NodePort "
-        "-n smart-intersection"
-      )
-      assert code == 0, f"Kubernetes deployment failed: {err}"
-      logger.info("Kubernetes environment deployed.")
+    logger.info("Deploying Kubernetes environment...")
+    out, err, code = run_command(
+      "helm upgrade --install smart-intersection ./chart "
+      "--create-namespace "
+      "--set grafana.service.type=NodePort "
+      "-n smart-intersection"
+    )
+    assert code == 0, f"Kubernetes deployment failed: {err}"
+    logger.info("Kubernetes environment deployed.")
 
-      # Wait for all pods to be ready
-      wait_for_pods_ready("smart-intersection")
-      
-      # Get dynamic NodePort
-      web_node_port = get_node_port("smart-intersection-web", "smart-intersection")
+    # Wait for all pods to be ready
+    wait_for_pods_ready("smart-intersection")
+    
+    # Get dynamic NodePort
+    web_node_port = get_node_port("smart-intersection-web", "smart-intersection")
 
-      # Start port forwarding for localhost access only
-      start_port_forwarding("smart-intersection-web", web_node_port, 443)
-      start_port_forwarding("smart-intersection-grafana", 3000, 3000)
-      start_port_forwarding("smart-intersection-influxdb", 8086, 8086)
-      start_port_forwarding("smart-intersection-nodered", 1880, 1880)
+    # Start port forwarding for localhost access only
+    start_port_forwarding("smart-intersection-web", web_node_port, 443)
+    start_port_forwarding("smart-intersection-grafana", 3000, 3000)
+    start_port_forwarding("smart-intersection-influxdb", 8086, 8086)
+    start_port_forwarding("smart-intersection-nodered", 1880, 1880)
 
-      # Check service readiness
-      localhost_services_urls = [
-        get_scenescape_kubernetes_url(),
-        GRAFANA_URL,
-        INFLUX_DB_URL,
-        NODE_RED_URL
-      ]
-      wait_for_services_readiness(localhost_services_urls)
-      
-      if are_remote_urls_configured():        
-        # Start remote port forwarding for each configured service
-        if SCENESCAPE_REMOTE_URL:
-          parsed = urllib.parse.urlparse(SCENESCAPE_REMOTE_URL)
-          logger.info(f"SCENESCAPE_REMOTE_URL: {SCENESCAPE_REMOTE_URL}")
-          logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          start_remote_port_forwarding("smart-intersection-web", parsed.hostname, 443, 443)
-          
-        if GRAFANA_REMOTE_URL:
-          parsed = urllib.parse.urlparse(GRAFANA_REMOTE_URL)
-          logger.info(f"GRAFANA_REMOTE_URL: {GRAFANA_REMOTE_URL}")
-          logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          start_remote_port_forwarding("smart-intersection-grafana", parsed.hostname, parsed.port, 3000)
-          
-        if INFLUX_REMOTE_DB_URL:
-          parsed = urllib.parse.urlparse(INFLUX_REMOTE_DB_URL)
-          logger.info(f"INFLUX_REMOTE_DB_URL: {INFLUX_REMOTE_DB_URL}")
-          logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          start_remote_port_forwarding("smart-intersection-influxdb", parsed.hostname, parsed.port, 8086)
-          
-        if NODE_RED_REMOTE_URL:
-          parsed = urllib.parse.urlparse(NODE_RED_REMOTE_URL)
-          logger.info(f"NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
-          logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
-          start_remote_port_forwarding("smart-intersection-nodered", parsed.hostname, parsed.port, 1880)
-      else:
-        logger.info("No remote URLs configured, skipping remote port forwarding.")
+    # Check service readiness
+    localhost_services_urls = [
+      get_scenescape_kubernetes_url(),
+      GRAFANA_URL,
+      INFLUX_DB_URL,
+      NODE_RED_URL
+    ]
+    wait_for_services_readiness(localhost_services_urls)
+    
+    if are_remote_urls_configured():        
+      # Start remote port forwarding for each configured service
+      if SCENESCAPE_REMOTE_URL:
+        parsed = urllib.parse.urlparse(SCENESCAPE_REMOTE_URL)
+        logger.info(f"SCENESCAPE_REMOTE_URL: {SCENESCAPE_REMOTE_URL}")
+        logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
+        start_remote_port_forwarding("smart-intersection-web", parsed.hostname, 443, 443)
+        
+      if GRAFANA_REMOTE_URL:
+        parsed = urllib.parse.urlparse(GRAFANA_REMOTE_URL)
+        logger.info(f"GRAFANA_REMOTE_URL: {GRAFANA_REMOTE_URL}")
+        logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
+        start_remote_port_forwarding("smart-intersection-grafana", parsed.hostname, parsed.port, 3000)
+        
+      if INFLUX_REMOTE_DB_URL:
+        parsed = urllib.parse.urlparse(INFLUX_REMOTE_DB_URL)
+        logger.info(f"INFLUX_REMOTE_DB_URL: {INFLUX_REMOTE_DB_URL}")
+        logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
+        start_remote_port_forwarding("smart-intersection-influxdb", parsed.hostname, parsed.port, 8086)
+        
+      if NODE_RED_REMOTE_URL:
+        parsed = urllib.parse.urlparse(NODE_RED_REMOTE_URL)
+        logger.info(f"NODE_RED_REMOTE_URL: {NODE_RED_REMOTE_URL}")
+        logger.info(f"parsed.hostname: {parsed.hostname}, parsed.port: {parsed.port}")
+        start_remote_port_forwarding("smart-intersection-nodered", parsed.hostname, parsed.port, 1880)
+    else:
+      logger.info("No remote URLs configured, skipping remote port forwarding.")
   else:
     logger.info("Building and deploying Docker containers...")
     out, err, code = run_command("docker compose up -d")

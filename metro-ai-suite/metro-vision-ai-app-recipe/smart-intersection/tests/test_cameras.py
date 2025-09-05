@@ -70,52 +70,52 @@ def add_camera(waiter, camera_name, camera_id, url, deployment="docker"):
   return camera_card
 
 def manage_cameras_functionality_check(waiter, url, camera_name, modified_camera_name, deployment="docker"):
-    """Common function to test camera management functionality."""
-    waiter.perform_login(
-        url,
-        By.ID, "username",
-        By.ID, "password",
-        By.ID, "login-submit",
-        SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD
-    )
+  """Common function to test camera management functionality."""
+  waiter.perform_login(
+    url,
+    By.ID, "username",
+    By.ID, "password",
+    By.ID, "login-submit",
+    SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD
+  )
 
-    # Navigate to the Cameras page
-    cameras_nav_link = waiter.wait_and_assert(
-        EC.presence_of_element_located((By.ID, "nav-cameras")),
-        error_message="Cameras navigation link is not present on the page"
-    )
-    cameras_nav_link.click()
+  # Navigate to the Cameras page
+  cameras_nav_link = waiter.wait_and_assert(
+    EC.presence_of_element_located((By.ID, "nav-cameras")),
+    error_message="Cameras navigation link is not present on the page"
+  )
+  cameras_nav_link.click()
 
-    # Open the manage page for the specified camera
-    manage_link = waiter.wait_and_assert(
-        EC.presence_of_element_located((By.XPATH, f"//tr[td[contains(text(), '{camera_name}')]]//a[@title='Manage']")),
-        error_message="Manage link is not present in the specified row"
-    )
-    manage_link.click()
+  # Open the manage page for the specified camera
+  manage_link = waiter.wait_and_assert(
+    EC.presence_of_element_located((By.XPATH, f"//tr[td[contains(text(), '{camera_name}')]]//a[@title='Manage']")),
+    error_message="Manage link is not present in the specified row"
+  )
+  manage_link.click()
 
-    # Find "Save Camera" button
-    save_button = waiter.wait_and_assert(
-        EC.presence_of_element_located((By.ID, "bottom_save")),
-        error_message="Save Camera button is not present on the page"
-    )
+  # Find "Save Camera" button
+  save_button = waiter.wait_and_assert(
+    EC.presence_of_element_located((By.ID, "bottom_save")),
+    error_message="Save Camera button is not present on the page"
+  )
 
-    id_name_input = waiter.driver.find_element(By.ID, "id_name")
-    id_name_input.send_keys(modified_camera_name)
+  id_name_input = waiter.driver.find_element(By.ID, "id_name")
+  id_name_input.send_keys(modified_camera_name)
 
-    if deployment == "kubernetes":
-      id_command_input = waiter.driver.find_element(By.ID, "id_command")
-      id_camerachain_input = waiter.driver.find_element(By.ID, "id_camerachain")
+  if deployment == "kubernetes":
+    id_command_input = waiter.driver.find_element(By.ID, "id_command")
+    id_camerachain_input = waiter.driver.find_element(By.ID, "id_camerachain")
 
-      id_command_input.send_keys("CommandInput")
-      id_camerachain_input.send_keys("CameraChainInput")
+    id_command_input.send_keys("CommandInput")
+    id_camerachain_input.send_keys("CameraChainInput")
 
-    save_button.click()
+  save_button.click()
 
-    # Verify that the modified name appears in the specified element
-    modified_name_header = waiter.wait_and_assert(
-        EC.presence_of_element_located((By.XPATH, f"//h6[@class='card-header' and contains(., '{modified_camera_name}')]")),
-        error_message="Modified camera name is not present in the header"
-    )
+  # Verify that the modified name appears in the specified element
+  modified_name_header = waiter.wait_and_assert(
+    EC.presence_of_element_located((By.XPATH, f"//h6[@class='card-header' and contains(., '{modified_camera_name}')]")),
+    error_message="Modified camera name is not present in the header"
+  )
 
 def delete_camera_functionality_check(waiter, camera_name, camera_id, url, deployment="docker"):
   """Common function to test camera deletion functionality."""
@@ -148,7 +148,6 @@ def test_manage_cameras_kubernetes(waiter):
   camera_name = "west crosswalk view"
   modified_camera_name = "west crosswalk view modified"
   deployment = "kubernetes"
-
   manage_cameras_functionality_check(waiter, get_scenescape_kubernetes_url(), camera_name, modified_camera_name, deployment)
 
 @pytest.mark.docker
@@ -166,7 +165,6 @@ def test_add_camera_kubernetes(waiter):
   name_of_new_camera = "cam_T13914"
   id_of_new_camera = "cam_id_T13914"
   deployment = "kubernetes"
-
   add_camera(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url(), deployment)
 
 @pytest.mark.docker
@@ -175,7 +173,6 @@ def test_add_camera_docker(waiter):
   """Test that the admin can add a new camera."""
   name_of_new_camera = "cam_NEX-T9382"
   id_of_new_camera = "cam_id_NEX-T9382"
-
   add_camera(waiter, name_of_new_camera, id_of_new_camera, SCENESCAPE_URL)
 
 @pytest.mark.kubernetes
@@ -185,7 +182,6 @@ def test_delete_camera_kubernetes(waiter):
   name_of_new_camera = "cam_T13915"
   id_of_new_camera = "cam_id_T13915"
   deployment = "kubernetes"
-
   delete_camera_functionality_check(waiter, name_of_new_camera, id_of_new_camera, get_scenescape_kubernetes_url(), deployment)
 
 @pytest.mark.docker
@@ -194,5 +190,4 @@ def test_delete_camera_docker(waiter):
   """Test that the admin can delete a new camera."""
   name_of_new_camera = "cam_NEX-T9383"
   id_of_new_camera = "cam_id_NEX-T9383"
-
   delete_camera_functionality_check(waiter, name_of_new_camera, id_of_new_camera, SCENESCAPE_URL)

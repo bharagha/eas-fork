@@ -64,28 +64,28 @@ def remote_components_access_functionality_check(scenescape_remote_url, grafana_
   check_urls_access(urls_to_check)
 
 def influx_db_login_check(
-    waiter,
-    url=INFLUX_DB_URL,
-    username=INFLUX_DB_ADMIN_USERNAME,
-    password=INFLUX_DB_ADMIN_PASSWORD,
-    expected_selector="[data-testid='home-page--header']",
-    error_message='Welcome message not visible within 10 seconds after login'
+  waiter,
+  url=INFLUX_DB_URL,
+  username=INFLUX_DB_ADMIN_USERNAME,
+  password=INFLUX_DB_ADMIN_PASSWORD,
+  expected_selector="[data-testid='home-page--header']",
+  error_message='Welcome message not visible within 10 seconds after login'
 ):
-    """
-    Helper function to test login to InfluxDB (success or failure).
-    Waits for the specified element and checks for the given error message.
-    """
-    waiter.perform_login(
-        url,
-        By.CSS_SELECTOR, "[data-testid='username']",
-        By.CSS_SELECTOR, "[data-testid='password']",
-        By.CSS_SELECTOR, "[data-testid='button']",
-        username, password
-    )
-    waiter.wait_and_assert(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, expected_selector)),
-        error_message=error_message
-    )
+  """
+  Helper function to test login to InfluxDB (success or failure).
+  Waits for the specified element and checks for the given error message.
+  """
+  waiter.perform_login(
+    url,
+    By.CSS_SELECTOR, "[data-testid='username']",
+    By.CSS_SELECTOR, "[data-testid='password']",
+    By.CSS_SELECTOR, "[data-testid='button']",
+    username, password
+  )
+  waiter.wait_and_assert(
+    EC.visibility_of_element_located((By.CSS_SELECTOR, expected_selector)),
+    error_message=error_message
+  )
 
 def grafana_failed_login_functionality_check(waiter):
   """Common function to test Grafana failed login functionality."""
@@ -152,51 +152,51 @@ def test_grafana_failed_login_docker(waiter):
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13918")
 def test_influx_db_login_kubernetes(waiter):
-    influx_db_login_check(waiter)
+  influx_db_login_check(waiter)
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9617")
 def test_influx_db_login_docker(waiter):
-    influx_db_login_check(waiter)
+  influx_db_login_check(waiter)
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13919")
 def test_remote_influx_db_login_kubernetes(waiter):
-    if not INFLUX_REMOTE_DB_URL:
-        pytest.skip("INFLUX_REMOTE_DB_URL is not set")
-    influx_db_login_check(
-        waiter,
-        url=INFLUX_REMOTE_DB_URL
-    )
+  if not INFLUX_REMOTE_DB_URL:
+    pytest.skip("INFLUX_REMOTE_DB_URL is not set")
+  influx_db_login_check(
+    waiter,
+    url=INFLUX_REMOTE_DB_URL
+  )
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9619")
 def test_remote_influx_db_login_docker(waiter):
-    if not INFLUX_REMOTE_DB_URL:
-        pytest.skip("INFLUX_REMOTE_DB_URL is not set")
-    influx_db_login_check(
-        waiter,
-        url=INFLUX_REMOTE_DB_URL
-    )
+  if not INFLUX_REMOTE_DB_URL:
+    pytest.skip("INFLUX_REMOTE_DB_URL is not set")
+  influx_db_login_check(
+    waiter,
+    url=INFLUX_REMOTE_DB_URL
+  )
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13920")
 def test_influx_db_failed_login_kubernetes(waiter):
-    influx_db_login_check(
-        waiter,
-        username="wrong_username",
-        password="wrong_password",
-        expected_selector="[data-testid='notification-error--children']",
-        error_message='Error notification not visible within 10 seconds after failed login'
-    )
+  influx_db_login_check(
+    waiter,
+    username="wrong_username",
+    password="wrong_password",
+    expected_selector="[data-testid='notification-error--children']",
+    error_message='Error notification not visible within 10 seconds after failed login'
+  )
 
 @pytest.mark.docker
 @pytest.mark.zephyr_id("NEX-T9621")
 def test_influx_db_failed_login_docker(waiter):
-    influx_db_login_check(
-        waiter,
-        username="wrong_username",
-        password="wrong_password",
-        expected_selector="[data-testid='notification-error--children']",
-        error_message='Error notification not visible within 10 seconds after failed login'
-    )
+  influx_db_login_check(
+    waiter,
+    username="wrong_username",
+    password="wrong_password",
+    expected_selector="[data-testid='notification-error--children']",
+    error_message='Error notification not visible within 10 seconds after failed login'
+  )
