@@ -1,85 +1,56 @@
-<!--
-# SPDX-FileCopyrightText: (C) 2025 Intel Corporation
-# SPDX-License-Identifier: LicenseRef-Intel-Edge-Software
-# This file is licensed under the Limited Edge Software Distribution License Agreement.
--->
+# Smart Intersection
 
-# Testing with Pytest
+The **Smart Intersection** is a sample application that unifies the analytics of a traffic intersection.
 
-- [Testing with Pytest](#testing-with-pytest)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-    - [Running tests](#running-tests)
+It demonstrates how edge AI technologies can address traffic management challenges using scene-based analytics. It combines analytics from multiple traffic cameras to provide a unified intersection view, enabling advanced use cases such as object tracking across multiple viewpoints, motion vector analysis (e.g., speed and heading), and understanding object interactions in three-dimensional space. This application highlights how existing camera infrastructure can be leveraged for real-time, multi-camera scene analytics, showcasing a shift from frame-based analysis to integrated, edge AI-driven solutions for smarter traffic management.
 
-## Prerequisites
+The following are some example use cases:
 
-- Python 3.12 or higher
-- Python venv installed
-- Latest Chrome browser installed
-- **For remote endpoint tests**: Configure remote URLs in the `.env` file inside smart-instersection directory for the following variables:
-  - `SCENESCAPE_REMOTE_URL`
-  - `GRAFANA_REMOTE_URL`
-  - `INFLUX_REMOTE_DB_URL`
-  - `NODE_RED_REMOTE_URL`
-  
-  These should contain the external IP address of the machine running the Docker containers and the corresponding service ports. For example:
-  ```
-  SCENESCAPE_REMOTE_URL="https://YOUR_MACHINE_IP"
-  GRAFANA_REMOTE_URL="http://YOUR_MACHINE_IP:3000"
-  INFLUX_REMOTE_DB_URL="http://YOUR_MACHINE_IP:8086"
-  NODE_RED_REMOTE_URL="http://YOUR_MACHINE_IP:1880"
-  ```
-  
-  Replace `YOUR_MACHINE_IP` with the actual IP address of your machine. If you do not set those URLs, remote endpoint tests will be skipped.
+- **Use Case 1**: Pedestrian Safety - Enhance the safety for vulnerable road users (VRUs) at crosswalks.
+  - Example: Scene-based region of interest (ROI) analytics help identify VRUs actively using crosswalks and detect unsafe situations, such as pedestrians walking outside the designated crosswalk areas.
+- **Use Case 2**: Measure average vehicle count and average dwell time in each lane. Dwell time refers to the amount of time a vehicle spends at a stop, such as a bus stop or train station, without moving.
+  - Example: Vehicles spending too much time in a lane indicates anomalies such as stalled vehicles, accidents, and congestion.
 
-- Prepare your environment according to the following guides:
-  - [Get Started Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
+The key benefits are as follows:
 
-## Installation
+- **Multi-camera multi-object tracking**: Enables tracking of objects across multiple camera views.
+- **Scene based analytics**: Regions of interest that span multiple views can be easily defined on the map rather than independently on each camera view. This greatly simplifies business logic, enables more flexibility in defining regions, and allows various types of sensors to be used to track vehicles and people such as lidar and radar in addition to cameras.
+- **Improved Urban Management**: Object tracks and analytics are available near-real-time on the MQTT broker to enable actionable insights for traffic monitoring and safety applications.
+- **Reduced TCO**: Works with existing cameras, simplifies business logic development, and future-proofs the solution by enabling additional sensors and cameras as needed without changing the business logic.
 
-1. **Navigate to the smart-intersection directory:**
+## Get Started
 
-   ```bash
-   cd smart-intersection
-   ```
+To see the system requirements and other installations, see the following guides:
 
-2. **Create a virtual environment on your system:**
+- [System Requirements](./docs/user-guide/system-requirements.md): Check the hardware and software requirements for deploying the application.
+- [Get Started](./docs/user-guide/get-started.md): Follow step-by-step instructions to set up the application.
 
-   ```bash
-   python3 -m venv venv
-   ```
+## How It Works
+This section provides a high-level view of how the application integrates with a typical system architecture.
 
-3. **Activate the virtual environment:**
+![High-Level System Diagram](./docs/user-guide/_images/architecture.png)
 
-   ```bash
-   source venv/bin/activate
-   ```
+### Example Content for Diagram Description
+- **Inputs**:
+  - **Video Files** - Four traffic intersection cameras that capture videos simultaneously.
+  - **Scene Database** - Pre-configured intersection scene with satellite view of intersection, calibrated cameras, and regions of interest.
 
-4. **Install the required packages using pip:**
+  The video recordings are used to simulate the live feed from cameras deployed at a traffic intersection. The application can be configured to work with live cameras.
+- **Processing**:
+  - **Video Analytics** - Deep Learning Streamer Pipeline Server (DL Streamer Pipeline Server) utilizes a pre-trained object detection model to generate object detection metadata and and a local NTP server for synchronized timestamps. This metadata is published to the MQTT broker
+  - **Sensor Fusion** - Scene Controller Microservice fuses the metadata from video analytics utilizing scene data obtained through the Scene Management API. It uses the fused tracks and the configured analytics (regions of interest) to generate events that are published to the MQTT broker.
+  - **Aggregate Scene Analytics** - Region of interest analytics are read from the MQTT broker and stored in an InfluxDB bucket which enables time series analysis through Flux queries.
+- **Outputs**:
+  - Fused object tracks are available on the MQTT broker and visualized through the Scene Management UI.
+  - Aggregate scene analytics are visualized through a Grafana dashboard.
 
-   ```bash
-   python3 -m pip install -r requirements.txt
-   ```
+For more details, see [Overview ](./docs/user-guide/Overview.md)
 
-Now you are ready to run tests on your system. 
+## Learn More
 
-## Running tests
+- [How to Deploy with Helm](./docs/user-guide/how-to-deploy-helm.md): How to deploy the application using Helm on a Kubernetes cluster.
+- [Support and Troubleshooting](./docs/user-guide/support.md): Find solutions to common issues and troubleshooting steps.
 
-Use `pytest` to run tests. You can run either Docker or Kubernetes based tests. By default, pytest executes Docker tests only. To run Kubernetes tests, use the `-m kubernetes` option. You can also use the `-m docker` option to explicitly run Docker-based tests.
+## License
 
-```bash
-# Run all Docker tests (default)
-pytest tests
-
-# Run all Docker tests (explicit)
-pytest -m docker
-
-# Run all Kubernetes tests
-pytest -m kubernetes
-
-# Run a specific Docker test
-pytest tests/test_admin.py::test_login_docker
-
-# Run a specific Kubernetes test
-pytest -m kubernetes tests/test_admin.py::test_login_kubernetes
-```
+The application is licensed under the [LIMITED EDGE SOFTWARE DISTRIBUTION LICENSE AGREEMENT](LICENSE.txt).
