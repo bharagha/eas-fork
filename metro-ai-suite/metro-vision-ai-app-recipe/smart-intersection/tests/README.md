@@ -42,8 +42,9 @@ If this variable is not set, tests that require privileged port forwarding will 
 
 ## Installation
 
-- Prepare your environment according to the following guides:
-  - [Get Started Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
+- Clone the repository and install prerequisites according to the following guides(for Kubernetes also set up proxy settings if needed):
+  - [Docker Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
+  - [Kubernetes Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/how-to-deploy-helm.md)
 
 1. **Navigate to the smart-intersection directory:**
 
