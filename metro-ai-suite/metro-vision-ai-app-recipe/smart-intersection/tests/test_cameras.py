@@ -7,7 +7,8 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
-from .conftest import SCENESCAPE_URL, SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD, get_scenescape_kubernetes_url
+from tests.utils.kubernetes_utils import get_scenescape_kubernetes_url
+from .conftest import SCENESCAPE_URL, SCENESCAPE_USERNAME, SCENESCAPE_PASSWORD
 
 
 def add_camera(waiter, camera_name, camera_id, url, deployment="docker"):

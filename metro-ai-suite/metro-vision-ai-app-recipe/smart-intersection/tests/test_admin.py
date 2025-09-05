@@ -9,11 +9,10 @@ import subprocess
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
-from tests.utils.kubernetes_utils import get_node_port
+from tests.utils.kubernetes_utils import get_node_port, get_scenescape_kubernetes_url
 from tests.utils.utils import check_urls_access
 from .conftest import (
   SCENESCAPE_URL,
-  get_scenescape_kubernetes_url,
   SCENESCAPE_USERNAME,
   SCENESCAPE_PASSWORD,
 )
@@ -42,23 +41,6 @@ def web_options_availability_check(waiter, scenescape_url):
 
   # Check all URLs using the common function
   check_urls_access(navbar_links)
-
-
-@pytest.mark.docker
-@pytest.mark.zephyr_id("NEX-T9389")
-def test_login_docker(waiter):
-  """Test login functionality for Docker environment."""
-  login_functionality(waiter, SCENESCAPE_URL)
-
-@pytest.mark.kubernetes
-@pytest.mark.zephyr_id("NEX-T13559")
-def test_login_kubernetes(waiter):
-  """Test login functionality for Kubernetes environment."""
-  kubernetes_url = get_scenescape_kubernetes_url()
-  logger.info(f"Using Kubernetes URL: {kubernetes_url}")
-
-  login_functionality(waiter, kubernetes_url)
-  logger.info("Kubernetes login test completed")
 
 def login_functionality(waiter, url):
   """Common function to perform login."""
@@ -142,6 +124,22 @@ def change_password_functionality_check(waiter, url):
     EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Password change successful"),
     error_message='"Password change successful" message not found within 10 seconds'
   )
+
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9389")
+def test_login_docker(waiter):
+  """Test login functionality for Docker environment."""
+  login_functionality(waiter, SCENESCAPE_URL)
+
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13559")
+def test_login_kubernetes(waiter):
+  """Test login functionality for Kubernetes environment."""
+  kubernetes_url = get_scenescape_kubernetes_url()
+  logger.info(f"Using Kubernetes URL: {kubernetes_url}")
+  login_functionality(waiter, kubernetes_url)
+  logger.info("Kubernetes login test completed")
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13911")

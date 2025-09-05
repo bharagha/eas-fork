@@ -6,14 +6,13 @@ import pytest
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from tests.utils.kubernetes_utils import get_scenescape_kubernetes_url
 from tests.utils.ui_utils import waiter, driver
 from .conftest import (
   SCENESCAPE_URL,
   SCENESCAPE_USERNAME,
   SCENESCAPE_PASSWORD,
-  get_scenescape_kubernetes_url,
 )
-
 
 def add_object(waiter, object_name, url=SCENESCAPE_URL):
   """Helper function to log in and add a new object."""
@@ -56,20 +55,6 @@ def add_object(waiter, object_name, url=SCENESCAPE_URL):
     error_message=f"Table row with object name '{object_name}' is not present on the page"
   )
 
-
-@pytest.mark.kubernetes
-@pytest.mark.zephyr_id("NEX-T13921")
-def test_add_object_kubernetes(waiter):
-  """Test that the admin can add a new object."""
-  add_object(waiter, "object_NEX-T13921", get_scenescape_kubernetes_url())
-
-@pytest.mark.docker
-@pytest.mark.zephyr_id("NEX-T9386")
-def test_add_object_docker(waiter):
-  """Test that the admin can add a new object."""
-  add_object(waiter, "object_NEX-T9386")
-
-
 def delete_object_functionality_check(waiter, object_name, url=SCENESCAPE_URL):
   """
   Helper function to test that the admin can delete an existing object.
@@ -96,6 +81,17 @@ def delete_object_functionality_check(waiter, object_name, url=SCENESCAPE_URL):
     error_message=f"Table row with object name '{object_name}' is not present on the page"
   )
 
+@pytest.mark.kubernetes
+@pytest.mark.zephyr_id("NEX-T13921")
+def test_add_object_kubernetes(waiter):
+  """Test that the admin can add a new object."""
+  add_object(waiter, "object_NEX-T13921", get_scenescape_kubernetes_url())
+
+@pytest.mark.docker
+@pytest.mark.zephyr_id("NEX-T9386")
+def test_add_object_docker(waiter):
+  """Test that the admin can add a new object."""
+  add_object(waiter, "object_NEX-T9386")
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13922")

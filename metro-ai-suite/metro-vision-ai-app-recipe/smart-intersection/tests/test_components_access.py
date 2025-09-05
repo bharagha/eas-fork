@@ -8,6 +8,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from tests.utils.ui_utils import waiter, driver
+from tests.utils.kubernetes_utils import get_node_port, get_scenescape_kubernetes_url
 from tests.utils.utils import check_urls_access
 from .conftest import (
   SCENESCAPE_URL,  
@@ -20,7 +21,6 @@ from .conftest import (
   NODE_RED_REMOTE_URL,
   INFLUX_DB_ADMIN_USERNAME,
   INFLUX_DB_ADMIN_PASSWORD,
-  get_scenescape_kubernetes_url,
 )
 
 def components_access_functionality_check(scenescape_url):
@@ -62,6 +62,30 @@ def remote_components_access_functionality_check(scenescape_remote_url, grafana_
     pytest.skip("One or more remote URL environment variables are not set")
 
   check_urls_access(urls_to_check)
+
+def influx_db_login_check(
+    waiter,
+    url=INFLUX_DB_URL,
+    username=INFLUX_DB_ADMIN_USERNAME,
+    password=INFLUX_DB_ADMIN_PASSWORD,
+    expected_selector="[data-testid='home-page--header']",
+    error_message='Welcome message not visible within 10 seconds after login'
+):
+    """
+    Helper function to test login to InfluxDB (success or failure).
+    Waits for the specified element and checks for the given error message.
+    """
+    waiter.perform_login(
+        url,
+        By.CSS_SELECTOR, "[data-testid='username']",
+        By.CSS_SELECTOR, "[data-testid='password']",
+        By.CSS_SELECTOR, "[data-testid='button']",
+        username, password
+    )
+    waiter.wait_and_assert(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, expected_selector)),
+        error_message=error_message
+    )
 
 def grafana_failed_login_functionality_check(waiter):
   """Common function to test Grafana failed login functionality."""
@@ -124,30 +148,6 @@ def test_grafana_failed_login_kubernetes(waiter):
 def test_grafana_failed_login_docker(waiter):
   """Test Grafana failed login for Docker environment."""
   grafana_failed_login_functionality_check(waiter)
-
-def influx_db_login_check(
-    waiter,
-    url=INFLUX_DB_URL,
-    username=INFLUX_DB_ADMIN_USERNAME,
-    password=INFLUX_DB_ADMIN_PASSWORD,
-    expected_selector="[data-testid='home-page--header']",
-    error_message='Welcome message not visible within 10 seconds after login'
-):
-    """
-    Helper function to test login to InfluxDB (success or failure).
-    Waits for the specified element and checks for the given error message.
-    """
-    waiter.perform_login(
-        url,
-        By.CSS_SELECTOR, "[data-testid='username']",
-        By.CSS_SELECTOR, "[data-testid='password']",
-        By.CSS_SELECTOR, "[data-testid='button']",
-        username, password
-    )
-    waiter.wait_and_assert(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, expected_selector)),
-        error_message=error_message
-    )
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13918")
