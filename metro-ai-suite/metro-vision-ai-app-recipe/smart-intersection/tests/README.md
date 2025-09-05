@@ -32,10 +32,18 @@
   
   Replace `YOUR_MACHINE_IP` with the actual IP address of your machine. If you do not set those URLs, remote endpoint tests will be skipped.
 
-- Prepare your environment according to the following guides:
-  - [Get Started Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
+**Note:** Some tests executed in the Kubernetes environment require privileged port forwarding (e.g., port 443) using `kubectl port-forward` with `sudo`. In this case, you must set the `SUDO_PASSWORD` environment variable to your sudo password before running the tests, for example:
+
+```bash
+export SUDO_PASSWORD=your_sudo_password
+```
+
+If this variable is not set, tests that require privileged port forwarding will fail.
 
 ## Installation
+
+- Prepare your environment according to the following guides:
+  - [Get Started Guide](https://github.com/open-edge-platform/edge-ai-suites/blob/main/metro-ai-suite/metro-vision-ai-app-recipe/smart-intersection/docs/user-guide/get-started.md)
 
 1. **Navigate to the smart-intersection directory:**
 
