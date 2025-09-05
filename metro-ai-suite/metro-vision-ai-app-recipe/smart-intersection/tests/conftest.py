@@ -124,11 +124,6 @@ def setup_environment(request):
       
       # Get dynamic NodePort
       web_node_port = get_node_port("smart-intersection-web", "smart-intersection")
-      
-      # Set global SCENESCAPE_KUBERNETES_URL
-      global SCENESCAPE_KUBERNETES_URL
-      SCENESCAPE_KUBERNETES_URL = f"{SCENESCAPE_URL}:{web_node_port}"
-      logger.info(f"SCENESCAPE_KUBERNETES_URL set to: {SCENESCAPE_KUBERNETES_URL}")
 
       # Start port forwarding for localhost access only
       start_port_forwarding("smart-intersection-web", web_node_port, 443)
@@ -138,7 +133,7 @@ def setup_environment(request):
 
       # Check service readiness
       localhost_services_urls = [
-        SCENESCAPE_KUBERNETES_URL,
+        get_scenescape_kubernetes_url(),
         GRAFANA_URL,
         INFLUX_DB_URL,
         NODE_RED_URL

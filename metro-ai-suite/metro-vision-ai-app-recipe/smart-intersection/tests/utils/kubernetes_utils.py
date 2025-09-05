@@ -52,7 +52,7 @@ def get_scenescape_kubernetes_url():
     global SCENESCAPE_KUBERNETES_URL
     if SCENESCAPE_KUBERNETES_URL is None:
         web_node_port = get_node_port("smart-intersection-web", "smart-intersection")
-        return f"{SCENESCAPE_URL}:{web_node_port}"
+        SCENESCAPE_KUBERNETES_URL = f"{SCENESCAPE_URL}:{web_node_port}"
     return SCENESCAPE_KUBERNETES_URL
 
 def get_pod_name(service_name, namespace="smart-intersection"):
