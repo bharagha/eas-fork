@@ -21,6 +21,7 @@ configured Kubernetes cluster.
 - **Tools Installed**: Install the required tools:
   - Kubernetes CLI (kubectl)
   - Helm 3 or later
+- **cert-manager**: Will be installed as part of the deployment process (instructions provided below)
 
 ## Steps to Deploy
 
@@ -57,18 +58,30 @@ no_proxy: "localhost,127.0.0.1,.local,.cluster.local"
 
 Replace `your-proxy-server:port` with your actual proxy server details.
 
+### Install cert-manager
+
+The Smart Intersection application requires cert-manager for TLS certificate management. Install cert-manager before deploying the application:
+
+```bash
+# Install cert-manager
+helm install \
+  cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --version v1.18.2 \
+  --namespace cert-manager \
+  --create-namespace \
+  --set crds.enabled=true
+```
+
 ### Deploy the application
 
 Now you're ready to deploy the Smart Intersection application:
 
 ```bash
-
 # Install the chart
 helm upgrade --install smart-intersection ./smart-intersection/chart \
   --create-namespace \
   --set grafana.service.type=NodePort \
-  -n smart-intersection \
-  --dependency-update --wait
+  -n smart-intersection
 ```
 
 ## Access Application Services using Node Port
