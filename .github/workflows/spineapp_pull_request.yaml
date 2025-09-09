@@ -75,8 +75,7 @@ jobs:
         with:
           name: shellcheck-report
           path: shellcheck_report.txt
-
-   trivy-config-helm-scan:
+  trivy-config-helm-scan:
     permissions:
       contents: read
       packages: read          # needed for actions/checkout
