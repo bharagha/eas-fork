@@ -74,4 +74,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shellcheck-report
-          path: shellcheck_report.txt  
+          path: shellcheck_report.txt
+
+  trivy-config-scan:
+    permissions:
+      contents: read
+    name: Scan Config Files
+    strategy:
+      fail-fast: false
+    uses: open-edge-platform/edge-ai-libraries/.github/workflows/trivy-config-mode.yaml@main
+    with:
+      dockerfile-path: manufacturing-ai-suite/industrial-edge-insights-vision/
+      trivy-report-format: 'table'
+      severity-levels: 'HIGH,CRITICAL'
+      output-report-path: reports/spineapp_trivy_config_report.txt
+      name: spineapp_trivy_report 
