@@ -155,7 +155,7 @@ def test_logout_docker(waiter):
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T13912")
-def test_change_password_kuberentes(waiter):
+def test_change_password_kubernetes(waiter):
   """Test that the admin can change the password successfully."""
   change_password_functionality_check(waiter, get_scenescape_kubernetes_url())
 
