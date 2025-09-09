@@ -34,7 +34,7 @@ def add_sensor(waiter, sensor_name, sensor_id, url=SCENESCAPE_URL):
   # Wait for the '+ New Sensor' link to be present and clickable
   new_sensor_link = waiter.wait_and_assert(
     EC.element_to_be_clickable((By.XPATH, "//a[@class='btn btn-primary float-right' and @href='/singleton_sensor/create/']")),
-    error_message="+ New Sensor' link is not clickable"
+    error_message="'+ New Sensor' link is not clickable"
   )
   new_sensor_link.click()
 
