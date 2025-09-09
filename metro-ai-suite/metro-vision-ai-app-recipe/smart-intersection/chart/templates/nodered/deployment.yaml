@@ -20,7 +20,6 @@ spec:
       - name: nodered-config
         configMap:
           name: {{ .Release.Name }}-nodered # Reference the ConfigMap created above
-      {{- if .Values.import.certManager.enabled }}
       - name: secrets-volume
         projected:
           sources:
@@ -36,11 +35,6 @@ spec:
                 path: broker-cert
               - key: tls.key
                 path: broker-key
-      {{- else }}
-      - name: secrets-volume
-        secret:
-          secretName: {{ .Release.Name }}-nodered-rootcert
-      {{- end }}
       containers:
       - envFrom:
         - configMapRef:

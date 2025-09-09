@@ -1,4 +1,3 @@
-{{- if .Values.import.certManager.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
@@ -42,4 +41,3 @@ metadata:
 spec:
   ca:
     secretName: {{ .Release.Name }}-ca-secret
-{{- end }}

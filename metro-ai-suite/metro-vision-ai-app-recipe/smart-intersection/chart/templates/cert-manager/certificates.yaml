@@ -1,4 +1,3 @@
-{{- if .Values.import.certManager.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -41,4 +40,3 @@ spec:
   - "{{ .Release.Name }}-web.{{ .Release.Namespace }}.svc.cluster.local"
   duration: 8760h
   renewBefore: 720h
-{{- end }}
