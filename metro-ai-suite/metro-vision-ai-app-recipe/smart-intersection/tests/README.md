@@ -32,13 +32,10 @@
   
   Replace `YOUR_MACHINE_IP` with the actual IP address of your machine. If you do not set those URLs, remote endpoint tests will be skipped.
 
-**Note:** Some tests executed in the Kubernetes environment require privileged port forwarding (e.g., port 443) using `kubectl port-forward` with `sudo`. In this case, you must set the `SUDO_PASSWORD` environment variable to your sudo password before running the tests, for example:
+**Note:** Some tests executed in the Kubernetes environment require privileged port forwarding using `kubectl port-forward` with `sudo`. In such cases (e.g., port 443), you need to set the `SUDO_PASSWORD` environment variable to your sudo password before running the tests, or they will fail.  
 
 ```bash
 export SUDO_PASSWORD=your_sudo_password
-```
-
-If this variable is not set, tests that require privileged port forwarding will fail.
 
 ## Installation
 
