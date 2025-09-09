@@ -36,6 +36,7 @@
 
 ```bash
 export SUDO_PASSWORD=your_sudo_password
+```
 
 ## Installation
 
