@@ -71,7 +71,7 @@ Now you are ready to run tests on your system.
 
 ## Running tests
 
-Use `pytest` to run tests. You can run either Docker or Kubernetes based tests. By default, pytest executes Docker tests only. To run Kubernetes tests, use the `-m kubernetes` option. You can also use the `-m docker` option to explicitly run Docker-based tests.
+Use `pytest` to run tests based on either Docker or Kubernetes, using the `-m docker` or `-m kubernetes` options. Docker is the default, so you do not need to define it explicitly.
 
 ```bash
 # Run all Docker tests (default)
