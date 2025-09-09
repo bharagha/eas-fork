@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-web
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/app-secrets.yaml") . | sha256sum }}
     spec:
       # initContainers:
       # - name: init-smart-intersection-ri-web
@@ -79,7 +81,9 @@ spec:
         projected:
           sources:
           - secret:
-              name: {{ .Release.Name }}-web-auth-secrets
+              name: {{ .Release.Name }}-mqtt-auth-secrets
+          - secret:
+              name: {{ .Release.Name }}-django-secrets
           - secret:
               name: {{ .Release.Name }}-web-tls
               items:

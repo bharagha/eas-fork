@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-nodered
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/app-secrets.yaml") . | sha256sum }}
     spec:
       volumes:
       - name: nodered-config
@@ -59,7 +61,7 @@ spec:
           - name: INFLUX_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-nodered-secrets
+                name: {{ .Release.Name }}-influxdb-secrets
                 key: influxdb2-admin-token
         image: {{ .Values.nodered.repository }}:{{ .Values.nodered.tag }}
         name: {{ .Release.Name }}-nodered

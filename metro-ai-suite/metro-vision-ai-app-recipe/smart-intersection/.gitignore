@@ -7,5 +7,7 @@ src/secrets/*.token
 src/secrets/supass
 src/dlstreamer-pipeline-server/videos/*.ts
 chart/files/
+chart/charts/
+chart/Chart.lock
 __pycache__/
 venv/
