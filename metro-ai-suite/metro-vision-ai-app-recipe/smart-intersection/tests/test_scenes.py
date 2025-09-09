@@ -189,7 +189,7 @@ def test_intersection_demo_availability_docker(waiter):
 
 @pytest.mark.kubernetes
 @pytest.mark.zephyr_id("NEX-T10681")
-def test_remote_intersection_demo_availability_kuberentes(waiter):
+def test_remote_intersection_demo_availability_kubernetes(waiter):
   """Test that Intersection-Demo is visible after login via remote."""
   if not SCENESCAPE_REMOTE_URL:
     pytest.skip("SCENESCAPE_REMOTE_URL is not set")
