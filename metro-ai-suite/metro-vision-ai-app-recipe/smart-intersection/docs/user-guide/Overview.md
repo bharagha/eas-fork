@@ -1,6 +1,6 @@
 # Overview 
 
-<<Please add the introduction section in the index.rst file>>
+<!--Please add the introduction section in the index.rst file-->
 
 Unified analytics of a traffic intersection
 
