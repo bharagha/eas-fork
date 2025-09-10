@@ -22,7 +22,7 @@ Before You Begin, ensure the following:
 
 To deploy the Smart Intersection Sample Application, copy and paste the entire block of following commands into your terminal and run them:
 
-### Clone the Repository and Install Prerequisites
+### Step 1: Clone the Repository and Install Prerequisites
 
 **Note**: Skip this step if you have already followed the steps as part of the [Get Started guide](./get-started.md).
 
@@ -40,7 +40,7 @@ cd edge-ai-suites/metro-ai-suite/metro-vision-ai-app-recipe/
 
 ```
 
-### Configure Proxy Settings (If Behind a Proxy)
+### Step 2: Configure Proxy Settings (If behind a proxy)
 
 If you are deploying in a proxy environment, update the values.yml file with your proxy settings before installation:
 
@@ -85,7 +85,7 @@ This updates the application to use stable images from [Docker Hub](https://hub.
 
 </details>
 
-### Deploy the application
+### Step 3: Deploy the application
 
 Now you're ready to deploy the Smart Intersection application:
 
