@@ -4,10 +4,8 @@ Smart Intersection
 Smart Intersection Sample Application uses edge AI to improve traffic flow. It combines feeds from multiple cameras to track vehicles across angles, analyze speed and direction, and understand interactions in real space. The system can run on existing cameras and deliver real-time, coordinated insights for smarter traffic monitoring.
 
 **Example Use Cases**
-- **Pedestrian Safety**: Enhance safety for people crossing the street.
-  - The system tracks pedestrians at crosswalks. It alerts when people walk outside safe crossing areas.
-- **Traffic Flow Monitoring**: Count vehicles and measure dwell time in each lane.
-  - The system detects when vehicles stay too long in lanes. This identifies stalled cars, accidents, and traffic jams.
+- **Pedestrian Safety**: Enhance safety for people crossing the street. The system tracks pedestrians at crosswalks. It alerts when people walk outside safe crossing areas.
+- **Traffic Flow Monitoring**: Count vehicles and measure dwell time in each lane. The system detects when vehicles stay too long in lanes. This identifies stalled cars, accidents, and traffic jams.
 
 **Key Benefits**
 
