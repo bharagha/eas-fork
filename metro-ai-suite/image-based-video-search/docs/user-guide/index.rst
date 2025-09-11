@@ -75,28 +75,12 @@ Outputs
 
 .. toctree::
    :hidden:
-   :caption: Get Started
 
    Overview
    overview-architecture
    system-requirements
    release-notes
    get-started
-
-.. toctree::
-   :hidden:
-   :caption: How to
-
    how-to-deploy-helm
-
-.. toctree::
-   :hidden:
-   :caption: Source Code
-
    GitHub <https://github.com/open-edge-platform/edge-ai-suites/tree/main/metro-ai-suite/image-based-video-search>
-
-.. toctree::
-   :hidden:
-   :caption: Support and Community
-
    support
