@@ -26,7 +26,7 @@ The key benefits are as follows:
 
 ## How it Works
 
-<<If you are updating this section. Please update in the how-it-works.rst file>>
+<!--If you are updating this section. Please update in the how-it-works.rst file-->
 This section provides a high-level view of how the application integrates with a typical system architecture.
 
 ![High-Level System Diagram](./_images/architecture.png)
