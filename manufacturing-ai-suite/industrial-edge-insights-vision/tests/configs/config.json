@@ -1,12 +1,138 @@
 {
-   "APP001": {
-      "type": "pdd",
-      "device": "CPU",
-      "dlsps_log_param" : ["fps","number-streams=1"]
+   "PDD001": {
+      "app": "pdd",
+      "pipeline": "pallet_defect_detection",
+      "change_device": "CPU",
+      "check_sample_start": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
    },
-   "APP002": {
-      "type": "weld",
-      "device": "CPU",
-      "dlsps_log_param" : ["fps","number-streams=1"]
+   "PDD002": {
+      "app": "pdd",
+      "pipeline": "pallet_defect_detection",
+      "change_device": "CPU",
+      "check_sample_list": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
+   },
+   "PDD003": {
+      "app": "pdd",
+      "pipeline": "pallet_defect_detection",
+      "change_device": "CPU",
+      "check_sample_status": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
+   },
+   "PDD004": {
+      "app": "pdd",
+      "pipeline": "pallet_defect_detection",
+      "change_device": "CPU",
+      "check_sample_stop": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
+   },
+   "PDD005": {
+      "app": "pdd",
+      "pipeline": "pallet_defect_detection",
+      "change_device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:pdd","fps","number-streams=1"]
+   },
+   "WELD001": {
+      "app": "weld",
+      "pipeline": "weld_porosity_classification",
+      "change_device": "CPU",
+      "check_sample_start": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "WELD002": {
+      "app": "weld",
+      "pipeline": "weld_porosity_classification",
+      "change_device": "CPU",
+      "check_sample_list": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "WELD003": {
+      "app": "weld",
+      "pipeline": "weld_porosity_classification",
+      "change_device": "CPU",
+      "check_sample_status": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "WELD004": {
+      "app": "weld",
+      "pipeline": "weld_porosity_classification",
+      "change_device": "CPU",
+      "check_sample_stop": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "WELD005": {
+      "app": "weld",
+      "pipeline": "weld_porosity_classification",
+      "change_device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:weld","fps","number-streams=1"]
+   },
+   "PCB001": {
+      "app": "pcb",
+      "pipeline": "pcb_anomaly_detection",
+      "change_device": "CPU",
+      "check_sample_start": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "PCB002": {
+      "app": "pcb",
+      "pipeline": "pcb_anomaly_detection",
+      "change_device": "CPU",
+      "check_sample_list": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "PCB003": {
+      "app": "pcb",
+      "pipeline": "pcb_anomaly_detection",
+      "change_device": "CPU",
+      "check_sample_status": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "PCB004": {
+      "app": "pcb",
+      "pipeline": "pcb_anomaly_detection",
+      "change_device": "CPU",
+      "check_sample_stop": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "PCB005": {
+      "app": "pcb",
+      "pipeline": "pcb_anomaly_detection",
+      "change_device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:anomaly","fps","number-streams=1"]
+   },
+   "WSG001": {
+      "app": "wsg",
+      "pipeline": "worker_safety_gear_detection",
+      "change_device": "CPU",
+      "check_sample_start": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
+   },
+   "WSG002": {
+      "app": "wsg",
+      "pipeline": "worker_safety_gear_detection",
+      "change_device": "CPU",
+      "check_sample_list": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
+   },
+   "WSG003": {
+      "app": "wsg",
+      "pipeline": "worker_safety_gear_detection",
+      "change_device": "CPU",
+      "check_sample_status": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
+   },
+   "WSG004": {
+      "app": "wsg",
+      "pipeline": "worker_safety_gear_detection",
+      "change_device": "CPU",
+      "check_sample_stop": true,
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
+   },
+   "WSG005": {
+      "app": "wsg",
+      "pipeline": "worker_safety_gear_detection",
+      "change_device": "CPU",
+      "dlsps_log_param" : ["Starting WebRTC Stream for peer_id:worker_safety","fps","number-streams=1"]
    }
 }
