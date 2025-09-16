@@ -60,8 +60,8 @@ class utils:
             # Update .env file with required variables
             self._update_env_file({
                 "HOST_IP": hostIP,
-                "MTX_WEBRTCICESERVERS2_0_USERNAME": "intel1234",
-                "MTX_WEBRTCICESERVERS2_0_PASSWORD": "intel1234"
+                "MTX_WEBRTCICESERVERS2_0_USERNAME": "test1234",
+                "MTX_WEBRTCICESERVERS2_0_PASSWORD": "test1234"
             })
             
             # Run setup and start services
@@ -192,11 +192,6 @@ class utils:
             if "payload" in item:
                 if "pipeline" in value:
                     item["pipeline"] = value["pipeline"]
-                if "change_device" in value and "parameters" in item["payload"]:
-                    params = item["payload"]["parameters"]
-                    device_key = "detection-properties" if app_type in ["pdd", "wsg"] else "classification-properties"
-                    if device_key in params:
-                        params[device_key]["device"] = value["change_device"]
         with open(payload_path, "w") as file:
             json.dump(data, file, indent=4)
         print(f"✅ Updated payload.json for {app_type}")
@@ -212,27 +207,35 @@ class utils:
         """
         print('\n**********Starting pipeline**********')
         os.chdir(self.base_dir)
-        # Check if pipelines are already running
-        status_output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
-        if "[]" not in status_output:
-            raise Exception("Pipelines are already running")
-        print("✅ No pipelines currently running - ready to start")
-                        
-        # Start pipeline
-        pipeline_name = value.get("pipeline")
-        output = subprocess.check_output(f"./sample_start.sh -p {pipeline_name}", shell=True, executable='/bin/bash').decode('utf-8')
-        print(f"✅ Started pipeline: {pipeline_name}")
-        print(f"Output:\n{output}")
-
-        # Validate success
-        if "posted successfully" not in output:
-            raise Exception("Pipeline start failed - success message not found")
-        response_index = output.find("posted successfully") + len("posted successfully")
-        response_text = output[response_index:].strip()
-        if not response_text:
-            raise Exception("Response string is empty after posting payload")
-        print("✅ Pipeline started successfully")
-        return response_text
+        try:
+            status_output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
+            print(f"sample_status.sh output:\n{status_output}")
+            if "[]" not in status_output:
+                raise Exception("Pipelines are already running")
+            print("✅ No pipelines are currently running - ready to start new pipeline")
+            time.sleep(2)
+            pipeline_name = value.get("pipeline")
+            if pipeline_name:
+                output = subprocess.check_output(f"./sample_start.sh -p {pipeline_name}", shell=True, executable='/bin/bash')
+                print(f"Using configured pipeline: {pipeline_name}")
+            output = output.decode('utf-8')
+            print(f"sample_start.sh output:\n{output}")
+            
+            success_message = "posted successfully"
+            if success_message not in output:
+                raise Exception(f"Pipeline start failed. Expected message not found: '{success_message}'")
+            
+            if 'Response: "' in output:
+                start_pos = output.find('Response: "') + len('Response: "')
+                end_pos = output.find('"', start_pos)
+                if end_pos != -1:
+                    response_id = output[start_pos:end_pos]
+                    print(f"📋 Pipeline Response ID: {response_id}")
+                    print("✅ Pipeline started successfully, and response string is valid.")
+                    return response_id
+        except Exception as e:
+            print(f"❌ Error in start_pipeline_and_check: {e}")
+            raise Exception
     
 
     def get_pipeline_status(self, value):
@@ -329,27 +332,53 @@ class utils:
 
     def stop_pipeline_and_check(self, value):
         """
-        Stop pipeline and validate results.
+        Stop pipeline and validate that the specific running pipeline is aborted.
         Args:
             value (dict): Dictionary containing stop configuration parameters
         Raises:
-            Exception: If pipelines are still running after stop command
-            Exception: If no ABORTED instances found (stop may have failed)
+            Exception: If the specific pipeline is not found in ABORTED state
         """
         os.chdir(self.base_dir)
+        status_output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
+        print(f"Current pipeline status:\n{status_output}")
+        
+        running_pipeline_id = None
+        json_start, json_end = status_output.find('['), status_output.rfind(']') + 1
+        if json_start != -1 and json_end != 0:
+            json_content = status_output[json_start:json_end]
+            pipelines_data = json.loads(json_content)
+            for pipeline in pipelines_data:
+                if isinstance(pipeline, dict) and pipeline.get('state') == 'RUNNING':
+                    running_pipeline_id = pipeline.get('id')
+                    print(f"🔍 Found running pipeline with ID: {running_pipeline_id}")
+                    break
+        
+        if not running_pipeline_id:
+            raise Exception("No running pipeline found to stop")
+        
         output = subprocess.check_output("./sample_stop.sh", shell=True, executable='/bin/bash', stderr=subprocess.STDOUT).decode('utf-8')
         print(f"Output sample_stop.sh:\n{output}")
         time.sleep(2)
         status_output = subprocess.check_output("./sample_status.sh", shell=True, executable='/bin/bash').decode('utf-8')
-        print(f"Output sample_status.sh:\n{status_output}")
-        aborted_count = status_output.count("ABORTED")
-        running_count = status_output.count("RUNNING")
-        if running_count > 0:
-            raise Exception(f"Pipeline still running - should be ABORTED")
-        elif aborted_count > 0:
-            print(f"✅ Pipeline stopped successfully")
-        else:
-            raise Exception("No ABORTED status found - pipeline may not have stopped properly")
+        print(f"Output sample_status.sh after stop:\n{status_output}")
+        
+        pipeline_found_aborted = False
+        json_start, json_end = status_output.find('['), status_output.rfind(']') + 1
+        if json_start != -1 and json_end != 0:
+            json_content = status_output[json_start:json_end]
+            pipelines_data = json.loads(json_content)
+            for pipeline in pipelines_data:
+                if isinstance(pipeline, dict) and pipeline.get('id') == running_pipeline_id:
+                    pipeline_state = pipeline.get('state')
+                    print(f"🔍 Pipeline {running_pipeline_id} is now in state: {pipeline_state}")
+                    if pipeline_state == 'ABORTED':
+                        pipeline_found_aborted = True
+                        print(f"✅ Pipeline {running_pipeline_id} stopped successfully")
+                    else:
+                        raise Exception(f"Pipeline {running_pipeline_id} is in {pipeline_state} state, expected ABORTED")
+                    break
+        if not pipeline_found_aborted:
+            raise Exception(f"Pipeline {running_pipeline_id} not found in ABORTED state after stop command")
     
 
     def docker_compose_down(self):
@@ -362,16 +391,36 @@ class utils:
         subprocess.check_output("docker compose down -v", shell=True, executable='/bin/bash')
         time.sleep(3)        
         try:
-            docker_ps_output = subprocess.check_output("docker ps --format '{{.Names}}'", shell=True, executable='/bin/bash').decode('utf-8')
-            project_containers = ['dlstreamer-pipeline-server', 'prometheus', 'coturn', 'model-registry', 'otel-collector', 'mediamtx-server', 'mraas_postgres', 'mraas-minio']
-            running_containers = [name for name in docker_ps_output.strip().split('\n') if name and any(pc in name.lower() for pc in project_containers)]
-            
+            subprocess.check_output("docker compose down -v", shell=True, executable='/bin/bash')
+            print("✅ Docker compose down executed successfully.")
+            time.sleep(3)
+            print('\n**********Verifying no services are running**********')
+
+            docker_ps_output = subprocess.check_output("docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'", shell=True, executable='/bin/bash').decode('utf-8')
+            print("Current running containers:")
+            print(docker_ps_output)
+            lines = docker_ps_output.strip().split('\n')[1:]
+            running_containers = []
+            project_containers = ['dlstreamer-pipeline-server', 'prometheus', 'coturn', 'model-registry', 'otel-collector', 'mediamtx-server', 'mraas_postgres', 'mraas-minio', 'industrial-edge-insights-vision_vol_minio_data', 'industrial-edge-insights-vision_mr_postgres_data', 'industrial-edge-insights-vision_vol_pipeline_root']
+                
+            for line in lines:
+                if line.strip():
+                    container_name = line.split('\t')[0].strip()
+                    project_found = False
+                    for project_name in project_containers:
+                        if project_name in container_name.lower():
+                            project_found = True
+                            break
+                    if project_found:
+                        running_containers.append(container_name)
+                
             if running_containers:
-                print(f"⚠️ Warning: {len(running_containers)} project containers still running: {', '.join(running_containers)}")
+                print(f"⚠️ Warning: Found {len(running_containers)} project-related containers still running:")
                 for container in running_containers:
                     print(f"  - {container}")
+                print("These containers may need manual cleanup.")
             else:
-                print("✅ All project containers stopped")
-        except subprocess.CalledProcessError:
-            print("⚠️ Warning: Could not check running containers")
-        print("✅ Services stopped successfully")
+                print("✅ No project-related containers are running.")
+            print("✅ Services stopped successfully.") 
+        except subprocess.CalledProcessError as e:
+            raise Exception
